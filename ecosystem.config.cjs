@@ -1,8 +1,8 @@
 module.exports = {
   apps: [{
     name: 'maps-jessindo',
-    script: 'npx',
-    args: 'serve -s dist -l 7002',
+    script: 'serve',
+    args: '-s dist -l 7002',
     cwd: 'D:/projects/maps-jessindo',
     instances: 1,
     autorestart: true,
