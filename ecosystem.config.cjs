@@ -2,7 +2,7 @@ module.exports = {
   apps: [{
     name: 'maps-jessindo',
     script: 'serve',
-    args: '-s dist -l 7002',
+    args: ['-s', 'dist', '-l', '7002'],
     cwd: 'D:/projects/maps-jessindo',
     instances: 1,
     autorestart: true,
