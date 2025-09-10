@@ -1,7 +1,7 @@
 module.exports = {
   apps: [{
     name: 'maps-jessindo',
-    script: 'serve',
+    script: './node_modules/.bin/serve',
     args: ['-s', 'dist', '-l', '7002'],
     cwd: 'D:/projects/maps-jessindo',
     instances: 1,
