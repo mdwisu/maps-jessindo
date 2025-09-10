@@ -68,34 +68,68 @@ const Map = () => {
     }
   ]
 
-  // All area files mapping
+  // All area files mapping - now using single /data/geojson/ folder
   const areaFiles = {
     dalam_kota: [
-      'bogor_barat', 'bogor_selatan', 'bogor_tengah', 
-      'bogor_timur', 'bogor_utara', 'tanah_sereal'
+      { file: 'bogor_barat.geojson', name: 'Bogor Barat' },
+      { file: 'bogor_selatan.geojson', name: 'Bogor Selatan' },
+      { file: 'bogor_tengah.geojson', name: 'Bogor Tengah' },
+      { file: 'bogor_timur.geojson', name: 'Bogor Timur' },
+      { file: 'bogor_utara.geojson', name: 'Bogor Utara' },
+      { file: 'tanah_sereal.geojson', name: 'Tanah Sereal' }
     ],
     cariu: [
-      'cariu', 'jonggol', 'cileungsi', 'klapanunggal', 'sukamakmur'
+      { file: 'cariu.geojson', name: 'Cariu' },
+      { file: 'jonggol.geojson', name: 'Jonggol' },
+      { file: 'cileungsi.geojson', name: 'Cileungsi' },
+      { file: 'klapanunggal.geojson', name: 'Klapanunggal' },
+      { file: 'sukamakmur.geojson', name: 'Sukamakmur' }
     ],
     cigombong: [
-      'cigombong', 'leuwiliang', 'leuwisadeng', 'nanggung', 
-      'pamijahan', 'tenjo', 'tenjolaya'
+      { file: 'cigombong.geojson', name: 'Cigombong' },
+      { file: 'leuwiliang.geojson', name: 'Leuwiliang' },
+      { file: 'leuwisadeng.geojson', name: 'Leuwisadeng' },
+      { file: 'nanggung.geojson', name: 'Nanggung' },
+      { file: 'pamijahan.geojson', name: 'Pamijahan' },
+      { file: 'tenjo.geojson', name: 'Tenjo' },
+      { file: 'tenjolaya.geojson', name: 'Tenjolaya' }
     ],
     cisarua: [
-      'cisarua', 'ciawi', 'cisaruaa', 'sukajaya', 
-      'tamansari', 'tamansarii', 'tajurhalang'
+      { file: 'cisarua.geojson', name: 'Cisarua' },
+      { file: 'ciawi.geojson', name: 'Ciawi' },
+      { file: 'cisaruaa.geojson', name: 'Cisarua II' },
+      { file: 'sukajaya.geojson', name: 'Sukajaya' },
+      { file: 'tamansari.geojson', name: 'Tamansari' },
+      { file: 'tamansarii.geojson', name: 'Tamansari II' },
+      { file: 'tajurhalang.geojson', name: 'Tajurhalang' }
     ],
     citeurep: [
-      'citeureup', 'cibinong', 'gunung_putri', 'bojong_gede', 
-      'babakan_madang', 'sukaraja'
+      { file: 'citeureup.geojson', name: 'Citeureup' },
+      { file: 'cibinong.geojson', name: 'Cibinong' },
+      { file: 'gunung_putri.geojson', name: 'Gunung Putri' },
+      { file: 'bojong_gede.geojson', name: 'Bojong Gede' },
+      { file: 'babakan_madang.geojson', name: 'Babakan Madang' },
+      { file: 'sukaraja.geojson', name: 'Sukaraja' }
     ],
     jasinga: [
-      'Jasinga', 'rumpin', 'ranca_bungur', 'gunung_sindur', 
-      'cigudeg', 'cijeruk'
+      { file: 'Jasinga.geojson', name: 'Jasinga' },
+      { file: 'rumpin.geojson', name: 'Rumpin' },
+      { file: 'ranca_bungur.geojson', name: 'Ranca Bungur' },
+      { file: 'gunung_sindur.geojson', name: 'Gunung Sindur' },
+      { file: 'cigudeg.geojson', name: 'Cigudeg' },
+      { file: 'cijeruk.geojson', name: 'Cijeruk' }
     ],
     parung: [
-      'parung', 'ciomas', 'ciomass', 'caringin', 'ciampea', 
-      'cibangbulang', 'parung panjang', 'ciseeng', 'kengang', 'tanjungsari'
+      { file: 'parung.geojson', name: 'Parung' },
+      { file: 'ciomas.geojson', name: 'Ciomas' },
+      { file: 'ciomass.geojson', name: 'Ciomas II' },
+      { file: 'caringin.geojson', name: 'Caringin' },
+      { file: 'ciampea.geojson', name: 'Ciampea' },
+      { file: 'cibangbulang.geojson', name: 'Cibangbulang' },
+      { file: 'parung panjang.geojson', name: 'Parung Panjang' },
+      { file: 'ciseeng.geojson', name: 'Ciseeng' },
+      { file: 'kengang.geojson', name: 'Kemang' },
+      { file: 'tanjungsari.geojson', name: 'Tanjungsari' }
     ]
   }
 
@@ -122,48 +156,59 @@ const Map = () => {
     try {
       if (areaId === 'semua') {
         // Load all areas
-        for (const [areaName, files] of Object.entries(areaFiles)) {
+        for (const [areaName, fileList] of Object.entries(areaFiles)) {
           const areaInfo = availableAreas.find(a => a.id === areaName)
           const areaColor = areaInfo?.color || '#6b7280'
-          totalFiles += files.length
+          totalFiles += fileList.length
           
-          for (const fileName of files) {
+          for (const fileObj of fileList) {
             try {
-              const response = await fetch(`/data/${areaName}/${fileName}.geojson`)
+              const response = await fetch(`/data/geojson/${fileObj.file}`)
               if (response.ok) {
                 const data = await response.json()
-                const fileId = `${areaName}-${fileName}`
-                dataMap[fileId] = { ...data, areaId: areaName, areaColor }
+                const fileId = `${areaName}-${fileObj.file.replace('.geojson', '')}`
+                dataMap[fileId] = { 
+                  ...data, 
+                  areaId: areaName, 
+                  areaColor,
+                  displayName: fileObj.name
+                }
                 initialVisibleLayers[fileId] = true
                 successCount++
               } else {
-                console.warn(`File not found: ${fileName}.geojson in ${areaName}`)
+                console.warn(`File not found: ${fileObj.file} for ${areaName}`)
               }
             } catch (error) {
-              console.error(`Error loading ${fileName} from ${areaName}:`, error)
+              console.error(`Error loading ${fileObj.file} from ${areaName}:`, error)
             }
           }
         }
       } else if (areaFiles[areaId]) {
         // Load specific area
-        const files = areaFiles[areaId]
+        const fileList = areaFiles[areaId]
         const areaInfo = availableAreas.find(a => a.id === areaId)
         const areaColor = areaInfo?.color || '#6b7280'
-        totalFiles = files.length
+        totalFiles = fileList.length
         
-        for (const fileName of files) {
+        for (const fileObj of fileList) {
           try {
-            const response = await fetch(`/data/${areaId}/${fileName}.geojson`)
+            const response = await fetch(`/data/geojson/${fileObj.file}`)
             if (response.ok) {
               const data = await response.json()
-              dataMap[fileName] = { ...data, areaId, areaColor }
-              initialVisibleLayers[fileName] = true
+              const fileId = fileObj.file.replace('.geojson', '')
+              dataMap[fileId] = { 
+                ...data, 
+                areaId, 
+                areaColor,
+                displayName: fileObj.name
+              }
+              initialVisibleLayers[fileId] = true
               successCount++
             } else {
-              console.warn(`File not found: ${fileName}.geojson in ${areaId}`)
+              console.warn(`File not found: ${fileObj.file} for ${areaId}`)
             }
           } catch (error) {
-            console.error(`Error loading ${fileName} from ${areaId}:`, error)
+            console.error(`Error loading ${fileObj.file} from ${areaId}:`, error)
           }
         }
       }
@@ -352,14 +397,14 @@ const Map = () => {
                     Sedang Ditampilkan ({selectedAreaInfo.name})
                   </h5>
                   <div className="grid grid-cols-1 gap-1 text-xs max-h-32 overflow-y-auto">
-                    {Object.keys(allGeoJsonData).map(fileId => (
+                    {Object.entries(allGeoJsonData).map(([fileId, data]) => (
                       <div key={fileId} className="flex items-center">
                         <div 
                           className="w-2 h-2 rounded-full mr-2"
-                          style={{ backgroundColor: selectedAreaInfo.color }}
+                          style={{ backgroundColor: data?.areaColor || selectedAreaInfo.color }}
                         ></div>
-                        <span className="text-gray-600 capitalize">
-                          {fileId.replace(/_/g, ' ').replace(/([a-z])([A-Z])/g, '$1 $2')}
+                        <span className="text-gray-600">
+                          {data?.displayName || fileId.replace(/_/g, ' ')}
                         </span>
                       </div>
                     ))}
@@ -391,24 +436,16 @@ const Map = () => {
               data={data}
               style={geoJsonStyle(fileId)}
               onEachFeature={(feature, layer) => {
-                let areaColor = '#2563eb'
-                let displayName = fileId.replace(/_/g, ' ').replace(/([a-z])([A-Z])/g, '$1 $2')
+                let areaColor = data?.areaColor || '#2563eb'
+                let displayName = data?.displayName || fileId.replace(/_/g, ' ')
                 let areaName = ''
                 
-                if (selectedAreaInfo?.id === 'dalam_kota') {
-                  areaColor = '#0891b2'
-                } else if (selectedAreaInfo?.id === 'semua') {
-                  areaColor = data?.areaColor || '#6b7280'
+                if (selectedAreaInfo?.id === 'semua') {
                   const areaInfo = availableAreas.find(a => a.id === data?.areaId)
-                  areaName = areaInfo?.name || data?.areaId || ''
-                  displayName = fileId.includes('-') ? fileId.split('-')[1].replace(/_/g, ' ') : displayName
-                } else if (selectedAreaInfo) {
-                  areaColor = selectedAreaInfo.color
+                  areaName = areaInfo?.name || ''
+                } else if (selectedAreaInfo && selectedAreaInfo.id !== 'dalam_kota') {
                   areaName = selectedAreaInfo.name
                 }
-                
-                // Capitalize first letter of each word
-                displayName = displayName.replace(/\b\w/g, l => l.toUpperCase())
                 
                 if (feature.properties) {
                   const popupContent = `
