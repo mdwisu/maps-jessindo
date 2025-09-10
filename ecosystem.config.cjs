@@ -1,7 +1,7 @@
 module.exports = {
   apps: [{
     name: 'maps-jessindo',
-    script: 'server.js',
+    script: 'server.cjs',
     cwd: 'D:/projects/maps-jessindo',
     instances: 1,
     autorestart: true,
