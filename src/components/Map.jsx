@@ -99,72 +99,16 @@ const Map = () => {
     ]
   }
 
-  // GeoJSON files in dalam_kota folder - all use same Bogor color
-  const bogorGeoJsonFiles = [
-    { 
-      id: 'bogor-barat', 
-      name: 'Bogor Barat', 
-      path: '/data/dalam_kota/bogor_barat.geojson',
-      color: '#0891b2'
-    },
-    { 
-      id: 'bogor-selatan', 
-      name: 'Bogor Selatan', 
-      path: '/data/dalam_kota/bogor_selatan.geojson',
-      color: '#0891b2'
-    },
-    { 
-      id: 'bogor-tengah', 
-      name: 'Bogor Tengah', 
-      path: '/data/dalam_kota/bogor_tengah.geojson',
-      color: '#0891b2'
-    },
-    { 
-      id: 'bogor-timur', 
-      name: 'Bogor Timur', 
-      path: '/data/dalam_kota/bogor_timur.geojson',
-      color: '#0891b2'
-    },
-    { 
-      id: 'bogor-utara', 
-      name: 'Bogor Utara', 
-      path: '/data/dalam_kota/bogor_utara.geojson',
-      color: '#0891b2'
-    },
-    { 
-      id: 'tanah-sereal', 
-      name: 'Tanah Sereal', 
-      path: '/data/dalam_kota/tanah_sereal.geojson',
-      color: '#0891b2'
-    }
-  ]
 
-  // Function to load Bogor/dalam_kota data
-  const loadBogorGeoJsonData = async () => {
-    setLoading(true)
-    const dataMap = {}
-    const initialVisibleLayers = {}
-
-    for (const file of bogorGeoJsonFiles) {
-      try {
-        const response = await fetch(file.path)
-        const data = await response.json()
-        dataMap[file.id] = data
-        initialVisibleLayers[file.id] = true // Show all layers by default
-      } catch (error) {
-        console.error(`Error loading GeoJSON for ${file.name}:`, error)
-      }
-    }
-    
-    setAllGeoJsonData(dataMap)
-    setVisibleLayers(initialVisibleLayers)
-    setSelectedAreaInfo(availableAreas.find(a => a.id === 'dalam_kota'))
-    setLoading(false)
+  // Function to load all areas on initial load
+  const loadAllAreasInitial = async () => {
+    await loadAreaData('semua')
+    setSelectedAreaInfo(availableAreas.find(a => a.id === 'semua'))
   }
 
-  // Load all GeoJSON data from dalam_kota folder on component mount
+  // Load all areas on component mount
   useEffect(() => {
-    loadBogorGeoJsonData()
+    loadAllAreasInitial()
   }, [])
 
   // Function to load specific area data
@@ -241,12 +185,7 @@ const Map = () => {
 
   const handleAreaClick = async (area) => {
     setSelectedAreaInfo(area)
-    
-    if (area.id === 'dalam_kota') {
-      loadBogorGeoJsonData()
-    } else {
-      loadAreaData(area.id)
-    }
+    loadAreaData(area.id)
   }
 
   const geoJsonStyle = (fileId) => (feature) => {
@@ -335,7 +274,7 @@ const Map = () => {
                 <div className="p-4 border-b border-gray-100">
                   <div className="flex items-center text-gray-600">
                     <div className="animate-spin w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full mr-3"></div>
-                    <span className="text-sm">Loading Bogor areas...</span>
+                    <span className="text-sm">Loading area data...</span>
                   </div>
                 </div>
               )}
@@ -452,14 +391,12 @@ const Map = () => {
               data={data}
               style={geoJsonStyle(fileId)}
               onEachFeature={(feature, layer) => {
-                const file = bogorGeoJsonFiles.find(f => f.id === fileId)
                 let areaColor = '#2563eb'
                 let displayName = fileId.replace(/_/g, ' ').replace(/([a-z])([A-Z])/g, '$1 $2')
                 let areaName = ''
                 
                 if (selectedAreaInfo?.id === 'dalam_kota') {
                   areaColor = '#0891b2'
-                  displayName = file?.name || displayName
                 } else if (selectedAreaInfo?.id === 'semua') {
                   areaColor = data?.areaColor || '#6b7280'
                   const areaInfo = availableAreas.find(a => a.id === data?.areaId)
@@ -469,6 +406,9 @@ const Map = () => {
                   areaColor = selectedAreaInfo.color
                   areaName = selectedAreaInfo.name
                 }
+                
+                // Capitalize first letter of each word
+                displayName = displayName.replace(/\b\w/g, l => l.toUpperCase())
                 
                 if (feature.properties) {
                   const popupContent = `
