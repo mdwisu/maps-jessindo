@@ -2,9 +2,11 @@ const express = require('express');
 const path = require('path');
 const app = express();
 
+// Serve static files
 app.use(express.static(path.join(__dirname, 'dist')));
 
-app.get('*', (req, res) => {
+// Handle SPA routing - serve index.html for all non-static routes
+app.get('/*', (req, res) => {
   res.sendFile(path.resolve(__dirname, 'dist', 'index.html'));
 });
 
