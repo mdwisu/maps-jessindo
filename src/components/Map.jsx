@@ -19,117 +19,143 @@ const Map = () => {
       description: "Tampilkan seluruh area",
     },
     {
-      id: "dalam_kota",
-      name: "Dalam Kota",
+      id: "b1",
+      name: "Area B1",
       color: "#0891b2",
-      description: "6 kecamatan Kota Bogor",
+      description: "Area B1 - 3 kecamatan",
     },
     {
-      id: "cariu",
-      name: "Area Cariu",
+      id: "b2",
+      name: "Area B2",
       color: "#dc2626",
-      description: "Timur Laut - 4 kecamatan",
+      description: "Area B2 - 6 kecamatan",
     },
     {
-      id: "cigombong",
-      name: "Area Cigombong",
+      id: "b3",
+      name: "Area B3",
       color: "#059669",
-      description: "Barat Daya - 6 kecamatan",
+      description: "Area B3 - 5 kecamatan",
     },
     {
-      id: "cisarua",
-      name: "Area Cisarua",
+      id: "b4",
+      name: "Area B4",
       color: "#d97706",
-      description: "Selatan - 6 kecamatan",
+      description: "Area B4 - 8 kecamatan",
     },
     {
-      id: "citeurep",
-      name: "Area Citeurep",
+      id: "b5",
+      name: "Area B5",
       color: "#7c3aed",
-      description: "Utara - 5 kecamatan",
+      description: "Area B5 - 7 kecamatan",
     },
     {
-      id: "depok",
-      name: "Depok",
-      color: "#be185d",
-      description: "Kota Depok",
-    },
-    {
-      id: "jasinga",
-      name: "Area Jasinga",
+      id: "w",
+      name: "Area W",
       color: "#65a30d",
-      description: "Barat - 6 kecamatan",
+      description: "Area W - 8 kecamatan",
     },
     {
-      id: "parung",
-      name: "Area Parung",
+      id: "bgr1",
+      name: "BGR 1",
+      color: "#be185d",
+      description: "Rute BGR 1",
+    },
+    {
+      id: "bgr2",
+      name: "BGR 2",
       color: "#c2410c",
-      description: "Tengah Selatan - 8 kecamatan",
+      description: "Rute BGR 2",
     },
   ];
 
   // All area files mapping - now using single /data/geojson/ folder
   const areaFiles = {
-    dalam_kota: [
-      { file: "bogor_barat.geojson", name: "Bogor Barat" },
-      { file: "bogor_selatan.geojson", name: "Bogor Selatan" },
+    b1: [
       { file: "bogor_tengah.geojson", name: "Bogor Tengah" },
-      { file: "bogor_timur.geojson", name: "Bogor Timur" },
       { file: "bogor_utara.geojson", name: "Bogor Utara" },
       { file: "tanah_sereal.geojson", name: "Tanah Sereal" },
     ],
-    cariu: [
-      { file: "cariu.geojson", name: "Cariu" },
-      { file: "jonggol.geojson", name: "Jonggol" },
-      { file: "cileungsi.geojson", name: "Cileungsi" },
-      { file: "klapanunggal.geojson", name: "Klapanunggal" },
-      { file: "sukamakmur.geojson", name: "Sukamakmur" },
-      { file: "tanjungsari.geojson", name: "Tanjungsari" },
-    ],
-    cigombong: [
-      { file: "cigombong.geojson", name: "Cigombong" },
+    b2: [
+      { file: "leuwiliang.geojson", name: "Leuwiliang" },
+      { file: "cigudeg.geojson", name: "Cigudeg" },
+      { file: "nanggung.geojson", name: "Nanggung" },
+      { file: "cibangbulang.geojson", name: "Cibangbulang" },
+      { file: "Jasinga.geojson", name: "Jasinga" },
       { file: "pamijahan.geojson", name: "Pamijahan" },
-      { file: "tenjolaya.geojson", name: "Tenjolaya" },
-      { file: "caringin.geojson", name: "Caringin" },
-      { file: "cijeruk.geojson", name: "Cijeruk" },
-      { file: "tamansari.geojson", name: "Tamansari" },
+
+      // { file: "cariu.geojson", name: "Cariu" },
+      // { file: "jonggol.geojson", name: "Jonggol" },
+      // { file: "cileungsi.geojson", name: "Cileungsi" },
+      // { file: "klapanunggal.geojson", name: "Klapanunggal" },
+      // { file: "sukamakmur.geojson", name: "Sukamakmur" },
+      // { file: "tanjungsari.geojson", name: "Tanjungsari" },
     ],
-    cisarua: [
-      { file: "cisarua.geojson", name: "Cisarua" },
-      { file: "ciawi.geojson", name: "Ciawi" },
-      { file: "megamendung.geojson", name: "Megamendung" },
-    ],
-    citeurep: [
-      { file: "citeureup.geojson", name: "Citeureup" },
-      { file: "cibinong.geojson", name: "Cibinong" },
-      { file: "gunung_putri.geojson", name: "Gunung Putri" },
+    b3: [
       { file: "bojong_gede.geojson", name: "Bojong Gede" },
-      { file: "babakan_madang.geojson", name: "Babakan Madang" },
+      { file: "cisarua.geojson", name: "Cisarua" },
+      { file: "ciampea.geojson", name: "Ciampea" },
+      { file: "tenjolaya.geojson", name: "Tenjolaya" },
+      { file: "cipayung(depok).geojson", name: "Cipayung" },
+    ],
+    b4: [
+      { file: "cigombong.geojson", name: "Cigombong" },
+      { file: "cijeruk.geojson", name: "Cijeruk" },
+      { file: "caringin.geojson", name: "Caringin" },
+      { file: "ciawi.geojson", name: "Ciawi" },
+      { file: "bogor_selatan.geojson", name: "Bogor Selatan" },
+      { file: "bogor_timur.geojson", name: "Bogor Timur" },
+      { file: "bogor_utara.geojson", name: "Bogor Utara" },
       { file: "sukaraja.geojson", name: "Sukaraja" },
     ],
-    jasinga: [
-      { file: "Jasinga.geojson", name: "Jasinga" },
-      { file: "ranca_bungur.geojson", name: "Ranca Bungur" },
-      { file: "cigudeg.geojson", name: "Cigudeg" },
-      { file: "leuwisadeng.geojson", name: "Leuwisadeng" },
+    b5: [
+      { file: "caringin.geojson", name: "Caringin" },
+      { file: "megamendung.geojson", name: "Megamendung" },
+      { file: "pamijahan.geojson", name: "Pamijahan" },
       { file: "ciampea.geojson", name: "Ciampea" },
-      { file: "cibangbulang.geojson", name: "Cibangbulang" },
-      { file: "ciomas.geojson", name: "Ciomas" },
+      { file: "tamansari.geojson", name: "Tamansari" },
+      { file: "babakan_madang.geojson", name: "Babakan Madang" },
       { file: "dramaga.geojson", name: "Dramaga" },
-      { file: "sukajaya.geojson", name: "Sukajaya" },
-      { file: "leuwiliang.geojson", name: "Leuwiliang" },
-      { file: "nanggung.geojson", name: "Nanggung" },
+
+      // { file: "citeureup.geojson", name: "Citeureup" },
+      // { file: "cibinong.geojson", name: "Cibinong" },
+      // { file: "gunung_putri.geojson", name: "Gunung Putri" },
     ],
-    parung: [
-      { file: "parung.geojson", name: "Parung" },
-      { file: "parung panjang.geojson", name: "Parung Panjang" },
+    w: [
+      { file: "leuwiliang.geojson", name: "Leuwiliang" },
+      { file: "kengang.geojson", name: "Kemang" },
+      { file: "bogor_timur.geojson", name: "Bogor Timur" },
+      { file: "bogor_selatan.geojson", name: "Bogor Selatan" },
+      { file: "bogor_barat.geojson", name: "Bogor Barat" },
+      { file: "bogor_tengah.geojson", name: "Bogor Tengah" },
+      { file: "ciomas.geojson", name: "Ciomas" },
+      { file: "tanah_sereal.geojson", name: "Tanah Sereal" },
+
+      // { file: "leuwisadeng.geojson", name: "Leuwisadeng" },
+      // { file: "sukajaya.geojson", name: "Sukajaya" },
+    ],
+    bgr1: [
       { file: "ciseeng.geojson", name: "Ciseeng" },
       { file: "kengang.geojson", name: "Kemang" },
-      { file: "tajurhalang.geojson", name: "Tajurhalang" },
-      { file: "gunung_sindur.geojson", name: "Gunung Sindur" },
-      { file: "rumpin.geojson", name: "Rumpin" },
-      { file: "tenjo.geojson", name: "Tenjo" },
+      { file: "leuwiliang.geojson", name: "Leuwiliang" },
+      { file: "ciomas.geojson", name: "Ciomas" },
+      { file: "ranca_bungur.geojson", name: "Ranca Bungur" },
+      { file: "tamansari.geojson", name: "Tamansari" },
     ],
+    bgr2: [
+      { file: "caringin.geojson", name: "Caringin" },
+      { file: "megamendung.geojson", name: "Megamendung" },
+      { file: "cisarua.geojson", name: "Cisarua" },
+      { file: "bogor_utara.geojson", name: "Bogor Utara" },
+      { file: "sukaraja.geojson", name: "Sukaraja" },
+    ],
+    // parung: [
+    //   { file: "parung.geojson", name: "Parung" },
+    //   { file: "parung panjang.geojson", name: "Parung Panjang" },
+    //   { file: "tajurhalang.geojson", name: "Tajurhalang" },
+    //   { file: "gunung_sindur.geojson", name: "Gunung Sindur" },
+    //   { file: "rumpin.geojson", name: "Rumpin" },
+    //   { file: "tenjo.geojson", name: "Tenjo" },
+    // ],
   };
 
   // Function to load all areas on initial load
@@ -199,7 +225,10 @@ const Map = () => {
             const response = await fetch(`/data/geojson/${fileObj.file}`);
             if (response.ok) {
               const data = await response.json();
-              const fileId = fileObj.file.replace(".geojson", "");
+              const fileId = `${areaId}-${fileObj.file.replace(
+                ".geojson",
+                ""
+              )}`;
               dataMap[fileId] = {
                 ...data,
                 areaId,
@@ -243,8 +272,8 @@ const Map = () => {
     const data = allGeoJsonData[fileId];
     let color = "#2563eb"; // default color
 
-    if (selectedAreaInfo?.id === "dalam_kota") {
-      // Use specific dalam_kota color
+    if (selectedAreaInfo?.id === "b1") {
+      // Use specific b1 color
       color = "#0891b2";
     } else if (selectedAreaInfo?.id === "semua") {
       // Use area-specific color for "show all" mode
@@ -487,41 +516,91 @@ const Map = () => {
               data={data}
               style={geoJsonStyle(fileId)}
               onEachFeature={(feature, layer) => {
-                let areaColor = data?.areaColor || "#2563eb";
-                let displayName =
-                  data?.displayName || fileId.replace(/_/g, " ");
-                let areaName = "";
-
-                if (selectedAreaInfo?.id === "semua") {
-                  const areaInfo = availableAreas.find(
-                    (a) => a.id === data?.areaId
-                  );
-                  areaName = areaInfo?.name || "";
-                } else if (
-                  selectedAreaInfo &&
-                  selectedAreaInfo.id !== "dalam_kota"
-                ) {
-                  areaName = selectedAreaInfo.name;
-                }
-
                 if (feature.properties) {
-                  const popupContent = `
-                    <div>
-                      <h4 style="margin: 0 0 8px 0; color: ${areaColor}; font-weight: bold;">${displayName}</h4>
-                      ${
-                        areaName
-                          ? `<p style="margin: 0 0 8px 0; color: #6b7280; font-size: 12px;">${areaName}</p>`
-                          : ""
+                  let displayName =
+                    data?.displayName || fileId.replace(/_/g, " ");
+
+                  if (selectedAreaInfo?.id === "semua") {
+                    // For "semua" mode, find all areas that have this same kecamatan
+                    const currentKecamatan =
+                      feature.properties.KECAMATAN ||
+                      feature.properties.NAMOBJ ||
+                      displayName;
+                    const relatedAreas = [];
+
+                    // Search through all loaded data for the same kecamatan
+                    Object.entries(allGeoJsonData).forEach(
+                      ([otherFileId, otherData]) => {
+                        if (otherData.features) {
+                          otherData.features.forEach((otherFeature) => {
+                            const otherKecamatan =
+                              otherFeature.properties?.KECAMATAN ||
+                              otherFeature.properties?.NAMOBJ ||
+                              otherData.displayName;
+                            if (
+                              otherKecamatan === currentKecamatan &&
+                              otherData.areaId
+                            ) {
+                              const areaInfo = availableAreas.find(
+                                (a) => a.id === otherData.areaId
+                              );
+                              if (
+                                areaInfo &&
+                                !relatedAreas.find(
+                                  (area) => area.id === areaInfo.id
+                                )
+                              ) {
+                                relatedAreas.push(areaInfo);
+                              }
+                            }
+                          });
+                        }
                       }
-                      ${Object.entries(feature.properties)
-                        .map(
-                          ([key, value]) =>
-                            `<div><strong>${key}:</strong> ${value}</div>`
-                        )
-                        .join("")}
-                    </div>
-                  `;
-                  layer.bindPopup(popupContent);
+                    );
+
+                    const popupContent = `
+                      <div>
+                        <h4 style="margin: 0 0 8px 0; color: #2563eb; font-weight: bold;">${displayName}</h4>
+                        <div style="margin: 0 0 8px 0;">
+                          ${relatedAreas
+                            .map(
+                              (area) =>
+                                `<span style="display: inline-block; background: ${area.color}20; color: ${area.color}; padding: 2px 6px; border-radius: 4px; font-size: 11px; margin: 1px;">${area.name}</span>`
+                            )
+                            .join(" ")}
+                        </div>
+                        ${Object.entries(feature.properties)
+                          .map(
+                            ([key, value]) =>
+                              `<div><strong>${key}:</strong> ${value}</div>`
+                          )
+                          .join("")}
+                      </div>
+                    `;
+                    layer.bindPopup(popupContent);
+                  } else {
+                    // For specific area mode, show area info
+                    let areaColor = data?.areaColor || "#2563eb";
+                    let areaName = selectedAreaInfo?.name || "";
+
+                    const popupContent = `
+                      <div>
+                        <h4 style="margin: 0 0 8px 0; color: ${areaColor}; font-weight: bold;">${displayName}</h4>
+                        ${
+                          areaName
+                            ? `<p style="margin: 0 0 8px 0; color: #6b7280; font-size: 12px;">${areaName}</p>`
+                            : ""
+                        }
+                        ${Object.entries(feature.properties)
+                          .map(
+                            ([key, value]) =>
+                              `<div><strong>${key}:</strong> ${value}</div>`
+                          )
+                          .join("")}
+                      </div>
+                    `;
+                    layer.bindPopup(popupContent);
+                  }
                 }
               }}
             />
