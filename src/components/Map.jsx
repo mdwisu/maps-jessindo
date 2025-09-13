@@ -6,7 +6,8 @@ const Map = () => {
   const [allGeoJsonData, setAllGeoJsonData] = useState({});
   const [visibleLayers, setVisibleLayers] = useState({});
   const [loading, setLoading] = useState(false);
-  const [selectedAreaInfo, setSelectedAreaInfo] = useState(null);
+  const [loadingAreaId, setLoadingAreaId] = useState(null);
+  const [selectedAreas, setSelectedAreas] = useState([]);
   const [panelVisible, setPanelVisible] = useState(true);
   const [panelMinimized, setPanelMinimized] = useState(false);
 
@@ -160,8 +161,8 @@ const Map = () => {
 
   // Function to load all areas on initial load
   const loadAllAreasInitial = async () => {
-    await loadAreaData("semua");
-    setSelectedAreaInfo(availableAreas.find((a) => a.id === "semua"));
+    await loadAreaData(["semua"]);
+    setSelectedAreas([availableAreas.find((a) => a.id === "semua")]);
   };
 
   // Load all areas on component mount
@@ -170,7 +171,7 @@ const Map = () => {
   }, []);
 
   // Function to load specific area data
-  const loadAreaData = async (areaId) => {
+  const loadAreaData = async (areaIds) => {
     setLoading(true);
     const dataMap = {};
     const initialVisibleLayers = {};
@@ -178,8 +179,8 @@ const Map = () => {
     let totalFiles = 0;
 
     try {
-      if (areaId === "semua") {
-        // Load all areas
+      // If "semua" is in the list, load all areas
+      if (areaIds.includes("semua")) {
         for (const [areaName, fileList] of Object.entries(areaFiles)) {
           const areaInfo = availableAreas.find((a) => a.id === areaName);
           const areaColor = areaInfo?.color || "#6b7280";
@@ -213,49 +214,53 @@ const Map = () => {
             }
           }
         }
-      } else if (areaFiles[areaId]) {
-        // Load specific area
-        const fileList = areaFiles[areaId];
-        const areaInfo = availableAreas.find((a) => a.id === areaId);
-        const areaColor = areaInfo?.color || "#6b7280";
-        totalFiles = fileList.length;
+      } else {
+        // Load specific areas
+        for (const areaId of areaIds) {
+          if (areaFiles[areaId]) {
+            const fileList = areaFiles[areaId];
+            const areaInfo = availableAreas.find((a) => a.id === areaId);
+            const areaColor = areaInfo?.color || "#6b7280";
+            totalFiles += fileList.length;
 
-        for (const fileObj of fileList) {
-          try {
-            const response = await fetch(`/data/geojson/${fileObj.file}`);
-            if (response.ok) {
-              const data = await response.json();
-              const fileId = `${areaId}-${fileObj.file.replace(
-                ".geojson",
-                ""
-              )}`;
-              dataMap[fileId] = {
-                ...data,
-                areaId,
-                areaColor,
-                displayName: fileObj.name,
-              };
-              initialVisibleLayers[fileId] = true;
-              successCount++;
-            } else {
-              console.warn(`File not found: ${fileObj.file} for ${areaId}`);
+            for (const fileObj of fileList) {
+              try {
+                const response = await fetch(`/data/geojson/${fileObj.file}`);
+                if (response.ok) {
+                  const data = await response.json();
+                  const fileId = `${areaId}-${fileObj.file.replace(
+                    ".geojson",
+                    ""
+                  )}`;
+                  dataMap[fileId] = {
+                    ...data,
+                    areaId,
+                    areaColor,
+                    displayName: fileObj.name,
+                  };
+                  initialVisibleLayers[fileId] = true;
+                  successCount++;
+                } else {
+                  console.warn(`File not found: ${fileObj.file} for ${areaId}`);
+                }
+              } catch (error) {
+                console.error(
+                  `Error loading ${fileObj.file} from ${areaId}:`,
+                  error
+                );
+              }
             }
-          } catch (error) {
-            console.error(
-              `Error loading ${fileObj.file} from ${areaId}:`,
-              error
-            );
           }
         }
       }
 
-      console.log(`Loaded ${successCount}/${totalFiles} files for ${areaId}`);
+      console.log(`Loaded ${successCount}/${totalFiles} files for areas: ${areaIds.join(', ')}`);
 
       if (successCount === 0) {
-        console.warn(`No files loaded for area: ${areaId}`);
+        console.warn(`No files loaded for areas: ${areaIds.join(', ')}`);
       }
     } catch (error) {
-      console.error(`Critical error loading area ${areaId}:`, error);
+      console.error(`Critical error loading areas ${areaIds.join(', ')}:`, error);
     } finally {
       setAllGeoJsonData(dataMap);
       setVisibleLayers(initialVisibleLayers);
@@ -263,24 +268,50 @@ const Map = () => {
     }
   };
 
-  const handleAreaClick = async (area) => {
-    setSelectedAreaInfo(area);
-    loadAreaData(area.id);
+  const handleAreaToggle = async (area) => {
+    setLoadingAreaId(area.id);
+    
+    if (area.id === "semua") {
+      // If "Semua Area" is clicked, clear all selections and load all
+      setSelectedAreas([area]);
+      await loadAreaData(["semua"]);
+    } else {
+      // Toggle individual area selection
+      const isSelected = selectedAreas.some(selected => selected.id === area.id);
+      let newSelectedAreas;
+      
+      if (isSelected) {
+        // Remove area from selection
+        newSelectedAreas = selectedAreas.filter(selected => selected.id !== area.id);
+      } else {
+        // Add area to selection (but remove "semua" if present)
+        newSelectedAreas = [...selectedAreas.filter(selected => selected.id !== "semua"), area];
+      }
+      
+      // If no areas selected, default to "semua"
+      if (newSelectedAreas.length === 0) {
+        newSelectedAreas = [availableAreas.find(a => a.id === "semua")];
+        setSelectedAreas(newSelectedAreas);
+        await loadAreaData(["semua"]);
+      } else {
+        setSelectedAreas(newSelectedAreas);
+        await loadAreaData(newSelectedAreas.map(a => a.id));
+      }
+    }
+    
+    setLoadingAreaId(null);
   };
 
   const geoJsonStyle = (fileId) => (feature) => {
     const data = allGeoJsonData[fileId];
     let color = "#2563eb"; // default color
 
-    if (selectedAreaInfo?.id === "b1") {
-      // Use specific b1 color
-      color = "#0891b2";
-    } else if (selectedAreaInfo?.id === "semua") {
-      // Use area-specific color for "show all" mode
+    // If "semua" is selected or multiple areas, use area-specific colors
+    if (selectedAreas.some(area => area.id === "semua") || selectedAreas.length > 1) {
       color = data?.areaColor || "#6b7280";
-    } else if (selectedAreaInfo) {
-      // Use selected area color
-      color = selectedAreaInfo.color;
+    } else if (selectedAreas.length === 1) {
+      // Use selected area color for single area selection
+      color = selectedAreas[0].color;
     }
 
     return {
@@ -306,7 +337,7 @@ const Map = () => {
   const center = [-6.5944, 106.7892];
 
   return (
-    <div className="h-screen w-full relative">
+    <div className="h-screen w-full relative overflow-hidden">
       {/* Toggle Panel Button */}
       <div className="absolute top-4 left-4 z-[1001]">
         <button
@@ -377,15 +408,6 @@ const Map = () => {
           {/* Content */}
           {!panelMinimized && (
             <div className="max-h-[70vh] overflow-y-auto">
-              {/* Loading indicator */}
-              {loading && (
-                <div className="p-4 border-b border-gray-100">
-                  <div className="flex items-center text-gray-600">
-                    <div className="animate-spin w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full mr-3"></div>
-                    <span className="text-sm">Loading area data...</span>
-                  </div>
-                </div>
-              )}
 
               {/* Area Buttons */}
               <div className="p-4 space-y-2">
@@ -393,16 +415,26 @@ const Map = () => {
                   Available Areas
                 </h4>
 
-                {/* Show All Areas - Special button */}
-                <button
-                  onClick={() => handleAreaClick(availableAreas[0])}
-                  className={`w-full p-3 rounded-lg border-2 transition-all duration-200 text-left mb-3 ${
-                    selectedAreaInfo?.id === "semua"
+                {/* Show All Areas - Special checkbox */}
+                <div
+                  className={`w-full p-3 rounded-lg border-2 transition-all duration-200 mb-3 cursor-pointer ${
+                    selectedAreas.some(area => area.id === "semua")
                       ? "border-gray-600 bg-gray-50 text-gray-900"
                       : "border-gray-300 bg-white hover:border-gray-400 hover:shadow-md"
                   }`}
+                  onClick={() => handleAreaToggle(availableAreas[0])}
                 >
                   <div className="flex items-center space-x-2 mb-1">
+                    {loadingAreaId === "semua" ? (
+                      <div className="animate-spin w-4 h-4 border-2 border-gray-500 border-t-transparent rounded-full"></div>
+                    ) : (
+                      <input
+                        type="checkbox"
+                        checked={selectedAreas.some(area => area.id === "semua")}
+                        onChange={() => {}}
+                        className="w-4 h-4 text-gray-600 rounded"
+                      />
+                    )}
                     <div
                       className="w-3 h-3 rounded-full"
                       style={{ backgroundColor: availableAreas[0].color }}
@@ -411,67 +443,76 @@ const Map = () => {
                       {availableAreas[0].name}
                     </span>
                   </div>
-                  <p className="text-xs text-gray-500">
+                  <p className="text-xs text-gray-500 ml-6">
                     {availableAreas[0].description}
                   </p>
-                </button>
+                </div>
 
                 <div className="grid grid-cols-2 gap-2">
                   {availableAreas.slice(1).map((area) => (
-                    <button
+                    <div
                       key={area.id}
-                      onClick={() => handleAreaClick(area)}
-                      className={`p-3 rounded-lg border-2 transition-all duration-200 text-left ${
-                        selectedAreaInfo?.id === area.id
+                      onClick={() => handleAreaToggle(area)}
+                      className={`p-3 rounded-lg border-2 transition-all duration-200 text-left cursor-pointer ${
+                        selectedAreas.some(selected => selected.id === area.id)
                           ? "border-blue-500 bg-blue-50 text-blue-900"
                           : "border-gray-200 bg-white hover:border-gray-300 hover:shadow-md"
                       }`}
                     >
                       <div className="flex items-center space-x-2 mb-1">
+                        {loadingAreaId === area.id ? (
+                          <div className="animate-spin w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full"></div>
+                        ) : (
+                          <input
+                            type="checkbox"
+                            checked={selectedAreas.some(selected => selected.id === area.id)}
+                            onChange={() => {}}
+                            className="w-4 h-4 text-blue-600 rounded"
+                          />
+                        )}
                         <div
                           className="w-3 h-3 rounded-full"
                           style={{ backgroundColor: area.color }}
                         ></div>
                         <span className="font-medium text-sm">{area.name}</span>
                       </div>
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-gray-500 ml-6">
                         {area.description}
                       </p>
-                    </button>
+                    </div>
                   ))}
                 </div>
               </div>
 
-              {/* Selected Area Info */}
-              {selectedAreaInfo && (
+              {/* Selected Areas Info */}
+              {selectedAreas.length > 0 && (
                 <div className="border-t border-gray-200 bg-gray-50 p-4">
-                  <h5 className="font-semibold text-gray-700 text-sm mb-2 flex items-center">
-                    <div
-                      className="w-3 h-3 rounded-full mr-2"
-                      style={{ backgroundColor: selectedAreaInfo.color }}
-                    ></div>
-                    {selectedAreaInfo.name}
+                  <h5 className="font-semibold text-gray-700 text-sm mb-2">
+                    Area Terpilih ({selectedAreas.length})
                   </h5>
-                  <div className="text-xs text-gray-600 space-y-1">
-                    <div>
-                      <span className="font-medium">Status:</span>{" "}
-                      {selectedAreaInfo.description}
-                    </div>
-                    <div className="mt-2 text-xs text-green-700">
-                      🗺️ Menampilkan data untuk {selectedAreaInfo.name}
-                    </div>
+                  <div className="space-y-2">
+                    {selectedAreas.map((area) => (
+                      <div key={area.id} className="flex items-center text-xs">
+                        <div
+                          className="w-3 h-3 rounded-full mr-2"
+                          style={{ backgroundColor: area.color }}
+                        ></div>
+                        <span className="font-medium text-gray-700">{area.name}</span>
+                        <span className="text-gray-500 ml-2">- {area.description}</span>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="mt-2 text-xs text-green-700">
+                    🗺️ Menampilkan {selectedAreas.map(a => a.name).join(', ')}
                   </div>
                 </div>
               )}
 
               {/* Current Areas Legend */}
-              {selectedAreaInfo && Object.keys(allGeoJsonData).length > 0 && (
-                <div
-                  className="border-t border-gray-200 p-4"
-                  style={{ backgroundColor: `${selectedAreaInfo.color}10` }}
-                >
+              {selectedAreas.length > 0 && Object.keys(allGeoJsonData).length > 0 && (
+                <div className="border-t border-gray-200 p-4 bg-blue-50">
                   <h5 className="font-semibold text-gray-700 text-sm mb-2">
-                    Sedang Ditampilkan ({selectedAreaInfo.name})
+                    Kecamatan Ditampilkan ({Object.keys(allGeoJsonData).length})
                   </h5>
                   <div className="grid grid-cols-1 gap-1 text-xs max-h-32 overflow-y-auto">
                     {Object.entries(allGeoJsonData).map(([fileId, data]) => (
@@ -479,8 +520,7 @@ const Map = () => {
                         <div
                           className="w-2 h-2 rounded-full mr-2"
                           style={{
-                            backgroundColor:
-                              data?.areaColor || selectedAreaInfo.color,
+                            backgroundColor: data?.areaColor || "#6b7280",
                           }}
                         ></div>
                         <span className="text-gray-600">
@@ -500,7 +540,7 @@ const Map = () => {
       <MapContainer
         center={center}
         zoom={11}
-        style={{ height: "100%", width: "100%" }}
+        style={{ height: "100vh", width: "100%" }}
         zoomControl={true}
       >
         <TileLayer
@@ -520,7 +560,7 @@ const Map = () => {
                   let displayName =
                     data?.displayName || fileId.replace(/_/g, " ");
 
-                  if (selectedAreaInfo?.id === "semua") {
+                  if (selectedAreas.some(area => area.id === "semua") || selectedAreas.length > 1) {
                     // For "semua" mode, find all areas that have this same kecamatan
                     const currentKecamatan =
                       feature.properties.KECAMATAN ||
@@ -579,9 +619,9 @@ const Map = () => {
                     `;
                     layer.bindPopup(popupContent);
                   } else {
-                    // For specific area mode, show area info
+                    // For single area mode, show area info
                     let areaColor = data?.areaColor || "#2563eb";
-                    let areaName = selectedAreaInfo?.name || "";
+                    let areaName = selectedAreas[0]?.name || "";
 
                     const popupContent = `
                       <div>
