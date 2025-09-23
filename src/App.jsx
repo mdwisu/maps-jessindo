@@ -1,4 +1,5 @@
 import Map from './components/Map'
+import SalesmanSchedule from './components/SalesmanSchedule.jsx'
 import './App.css'
 
 function App() {
