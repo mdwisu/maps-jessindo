@@ -430,7 +430,11 @@ const Map = () => {
       {panelVisible && (
         <div className="absolute top-4 left-16 z-[1000] bg-white/95 backdrop-blur-sm rounded-xl shadow-xl border border-gray-200 overflow-hidden">
           {/* Header */}
-          <div className="bg-gradient-to-r from-blue-500 to-blue-600 text-white p-4">
+          <div
+            className="bg-gradient-to-r from-blue-500 to-blue-600 text-white p-4 cursor-pointer hover:from-blue-600 hover:to-blue-700 transition-all duration-200"
+            onClick={() => setPanelMinimized(!panelMinimized)}
+            title={panelMinimized ? "Expand" : "Minimize"}
+          >
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="font-bold text-lg">Maps Jessindo</h3>
@@ -438,10 +442,8 @@ const Map = () => {
                   {availableAreas.length} areas ready
                 </p>
               </div>
-              <button
-                onClick={() => setPanelMinimized(!panelMinimized)}
+              <div
                 className="text-white/80 hover:text-white transition-colors"
-                title={panelMinimized ? "Expand" : "Minimize"}
               >
                 <div
                   className={`transition-transform duration-200 ${
@@ -462,7 +464,7 @@ const Map = () => {
                     />
                   </svg>
                 </div>
-              </button>
+              </div>
             </div>
           </div>
 
