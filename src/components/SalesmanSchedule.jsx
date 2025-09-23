@@ -21,7 +21,7 @@ const SalesmanSchedule = () => {
   return (
     <div className="bg-white rounded-lg shadow-lg border border-gray-200 p-4 max-h-[calc(100vh-8rem)] flex flex-col">
       <div className="flex items-center justify-between mb-4 flex-shrink-0">
-        <h3 className="text-lg font-bold text-gray-800">Jadwal Salesman</h3>
+        <h3 className="text-lg font-bold text-gray-800">Jadwal Salesman fake</h3>
         <button
           onClick={() => setShowDetails(!showDetails)}
           className="text-gray-500 hover:text-gray-700"
