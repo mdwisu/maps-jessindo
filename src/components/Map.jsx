@@ -143,6 +143,8 @@ const Map = () => {
       { file: "parung.geojson", name: "Parung" },
       { file: "beji.geojson", name: "Beji" },
       { file: "tajurhalang.geojson", name: "Tajur Halang" },
+      // snack
+      { file: "sawangan.geojson", name: "Sawangan" },
     ],
     palsi: [
       { file: "cimanggis.geojson", name: "Cimanggis" },
@@ -361,7 +363,7 @@ const Map = () => {
   const [showSchedule, setShowSchedule] = useState(false);
 
   return (
-    <div className="h-screen w-full relative overflow-hidden">
+    <div className="h-screen w-screen fixed top-0 left-0 overflow-hidden">
       {/* Schedule Panel Toggle */}
       <div className="absolute top-4 right-4 z-[1002]">
         <button
@@ -398,20 +400,26 @@ const Map = () => {
           className="bg-white hover:bg-gray-50 p-3 rounded-lg shadow-lg border transition-all duration-200 group"
           title={panelVisible ? "Hide Panel" : "Show Panel"}
         >
-          <div className="w-5 h-5 flex flex-col justify-center space-y-1">
+          <div className="w-5 h-5 relative flex items-center justify-center">
             <div
-              className={`h-0.5 bg-gray-600 transition-all duration-200 ${
-                panelVisible ? "rotate-45 translate-y-1" : ""
+              className={`absolute h-0.5 bg-gray-600 transition-all duration-500 ease-out origin-center ${
+                panelVisible
+                  ? "w-4 rotate-45"
+                  : "w-full -translate-y-1.5"
               }`}
             ></div>
             <div
-              className={`h-0.5 bg-gray-600 transition-all duration-200 ${
-                panelVisible ? "opacity-0" : ""
+              className={`absolute h-0.5 bg-gray-600 transition-all duration-500 ease-out ${
+                panelVisible
+                  ? "opacity-0 scale-0 w-4"
+                  : "opacity-100 scale-100 w-full"
               }`}
             ></div>
             <div
-              className={`h-0.5 bg-gray-600 transition-all duration-200 ${
-                panelVisible ? "-rotate-45 -translate-y-1" : ""
+              className={`absolute h-0.5 bg-gray-600 transition-all duration-500 ease-out origin-center ${
+                panelVisible
+                  ? "w-4 -rotate-45"
+                  : "w-full translate-y-1.5"
               }`}
             ></div>
           </div>
@@ -661,11 +669,12 @@ const Map = () => {
       <MapContainer
         center={center}
         zoom={11}
-        style={{ height: "100vh", width: "100%" }}
-        zoomControl={true}
+        style={{ height: "100vh", width: "100vw" }}
+        zoomControl={false}
+        attributionControl={false}
       >
         <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          attribution=''
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
