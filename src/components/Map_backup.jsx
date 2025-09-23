@@ -20,60 +20,143 @@ const Map = () => {
       description: "Tampilkan seluruh area",
     },
     {
-      id: "dalam_kota",
-      name: "Dalam Kota",
-      color: "#dc2626",
-      description: "Area Dalam Kota",
-    },
-    {
-      id: "jasinga",
-      name: "Jasinga",
-      color: "#059669",
-      description: "Area Jasinga",
-    },
-    {
-      id: "cisarua",
-      name: "Cisarua",
+      id: "b1",
+      name: "Area B1",
       color: "#0891b2",
-      description: "Area Cisarua",
+      description: "Area B1 - 3 kecamatan",
     },
     {
-      id: "cigombong",
-      name: "Cigombong",
+      id: "b2",
+      name: "Area B2",
+      color: "#dc2626",
+      description: "Area B2 - 6 kecamatan",
+    },
+    {
+      id: "b3",
+      name: "Area B3",
+      color: "#059669",
+      description: "Area B3 - 5 kecamatan",
+    },
+    {
+      id: "b4",
+      name: "Area B4",
       color: "#d97706",
-      description: "Area Cigombong",
+      description: "Area B4 - 8 kecamatan",
+    },
+    {
+      id: "b5",
+      name: "Area B5",
+      color: "#7c3aed",
+      description: "Area B5 - 7 kecamatan",
+    },
+    {
+      id: "w",
+      name: "Area W",
+      color: "#65a30d",
+      description: "Area W - 8 kecamatan",
+    },
+    {
+      id: "bgr1",
+      name: "BGR 1",
+      color: "#be185d",
+      description: "Rute BGR 1",
+    },
+    {
+      id: "bgr2",
+      name: "BGR 2",
+      color: "#c2410c",
+      description: "Rute BGR 2",
     },
   ];
 
-  // All area files mapping - 4 regional divisions
+  // All area files mapping - now using single /data/geojson/ folder
   const areaFiles = {
-    dalam_kota: [
+    b1: [
       { file: "bogor_tengah.geojson", name: "Bogor Tengah" },
       { file: "bogor_utara.geojson", name: "Bogor Utara" },
-      { file: "bogor_selatan.geojson", name: "Bogor Selatan" },
-      { file: "bogor_timur.geojson", name: "Bogor Timur" },
-      { file: "bogor_barat.geojson", name: "Bogor Barat" },
       { file: "tanah_sereal.geojson", name: "Tanah Sereal" },
     ],
-    jasinga: [
-      { file: "Jasinga.geojson", name: "Jasinga" },
+    b2: [
       { file: "leuwiliang.geojson", name: "Leuwiliang" },
       { file: "cigudeg.geojson", name: "Cigudeg" },
       { file: "nanggung.geojson", name: "Nanggung" },
       { file: "cibangbulang.geojson", name: "Cibangbulang" },
+      { file: "jasinga.geojson", name: "Jasinga" },
       { file: "pamijahan.geojson", name: "Pamijahan" },
+
+      // { file: "cariu.geojson", name: "Cariu" },
+      // { file: "jonggol.geojson", name: "Jonggol" },
+      // { file: "cileungsi.geojson", name: "Cileungsi" },
+      // { file: "klapanunggal.geojson", name: "Klapanunggal" },
+      // { file: "sukamakmur.geojson", name: "Sukamakmur" },
+      // { file: "tanjungsari.geojson", name: "Tanjungsari" },
     ],
-    cisarua: [
+    b3: [
+      { file: "bojong_gede.geojson", name: "Bojong Gede" },
       { file: "cisarua.geojson", name: "Cisarua" },
-      { file: "megamendung.geojson", name: "Megamendung" },
-      { file: "ciawi.geojson", name: "Ciawi" },
+      { file: "ciampea.geojson", name: "Ciampea" },
+      { file: "tenjolaya.geojson", name: "Tenjolaya" },
+      { file: "cipayung(depok).geojson", name: "Cipayung" },
     ],
-    cigombong: [
+    b4: [
       { file: "cigombong.geojson", name: "Cigombong" },
       { file: "cijeruk.geojson", name: "Cijeruk" },
       { file: "caringin.geojson", name: "Caringin" },
+      { file: "ciawi.geojson", name: "Ciawi" },
+      { file: "bogor_selatan.geojson", name: "Bogor Selatan" },
+      { file: "bogor_timur.geojson", name: "Bogor Timur" },
+      { file: "bogor_utara.geojson", name: "Bogor Utara" },
       { file: "sukaraja.geojson", name: "Sukaraja" },
     ],
+    b5: [
+      { file: "caringin.geojson", name: "Caringin" },
+      { file: "megamendung.geojson", name: "Megamendung" },
+      { file: "pamijahan.geojson", name: "Pamijahan" },
+      { file: "ciampea.geojson", name: "Ciampea" },
+      { file: "tamansari.geojson", name: "Tamansari" },
+      { file: "babakan_madang.geojson", name: "Babakan Madang" },
+      { file: "dramaga.geojson", name: "Dramaga" },
+
+      // { file: "citeureup.geojson", name: "Citeureup" },
+      // { file: "cibinong.geojson", name: "Cibinong" },
+      // { file: "gunung_putri.geojson", name: "Gunung Putri" },
+    ],
+    w: [
+      { file: "leuwiliang.geojson", name: "Leuwiliang" },
+      { file: "kengang.geojson", name: "Kemang" },
+      { file: "bogor_timur.geojson", name: "Bogor Timur" },
+      { file: "bogor_selatan.geojson", name: "Bogor Selatan" },
+      { file: "bogor_barat.geojson", name: "Bogor Barat" },
+      { file: "bogor_tengah.geojson", name: "Bogor Tengah" },
+      { file: "ciomas.geojson", name: "Ciomas" },
+      { file: "tanah_sereal.geojson", name: "Tanah Sereal" },
+
+      // { file: "leuwisadeng.geojson", name: "Leuwisadeng" },
+      // { file: "sukajaya.geojson", name: "Sukajaya" },
+    ],
+    bgr1: [
+      { file: "ciseeng.geojson", name: "Ciseeng" },
+      { file: "kengang.geojson", name: "Kemang" },
+      { file: "leuwiliang.geojson", name: "Leuwiliang" },
+      { file: "ciomas.geojson", name: "Ciomas" },
+      { file: "ranca_bungur.geojson", name: "Ranca Bungur" },
+      { file: "tamansari.geojson", name: "Tamansari" },
+    ],
+    bgr2: [
+      { file: "caringin.geojson", name: "Caringin" },
+      { file: "megamendung.geojson", name: "Megamendung" },
+      { file: "cisarua.geojson", name: "Cisarua" },
+      { file: "bogor_utara.geojson", name: "Bogor Utara" },
+      { file: "sukaraja.geojson", name: "Sukaraja" },
+    ],
+    // parung: [
+    //   { file: "parung.geojson", name: "Parung" },
+    //   { file: "parung panjang.geojson", name: "Parung Panjang" },
+    //   { file: "tajurhalang.geojson", name: "Tajurhalang" },
+    //   { file: "gunung_sindur.geojson", name: "Gunung Sindur" },
+    //   { file: "rumpin.geojson", name: "Rumpin" },
+    //   { file: "tenjo.geojson", name: "Tenjo" },
+    // ],
   };
 
   // Function to load all areas on initial load
@@ -171,13 +254,20 @@ const Map = () => {
         }
       }
 
-      console.log(`Loaded ${successCount}/${totalFiles} files for areas: ${areaIds.join(', ')}`);
+      console.log(
+        `Loaded ${successCount}/${totalFiles} files for areas: ${areaIds.join(
+          ", "
+        )}`
+      );
 
       if (successCount === 0) {
-        console.warn(`No files loaded for areas: ${areaIds.join(', ')}`);
+        console.warn(`No files loaded for areas: ${areaIds.join(", ")}`);
       }
     } catch (error) {
-      console.error(`Critical error loading areas ${areaIds.join(', ')}:`, error);
+      console.error(
+        `Critical error loading areas ${areaIds.join(", ")}:`,
+        error
+      );
     } finally {
       setAllGeoJsonData(dataMap);
       setVisibleLayers(initialVisibleLayers);
@@ -187,35 +277,42 @@ const Map = () => {
 
   const handleAreaToggle = async (area) => {
     setLoadingAreaId(area.id);
-    
+
     if (area.id === "semua") {
       // If "Semua Area" is clicked, clear all selections and load all
       setSelectedAreas([area]);
       await loadAreaData(["semua"]);
     } else {
       // Toggle individual area selection
-      const isSelected = selectedAreas.some(selected => selected.id === area.id);
+      const isSelected = selectedAreas.some(
+        (selected) => selected.id === area.id
+      );
       let newSelectedAreas;
-      
+
       if (isSelected) {
         // Remove area from selection
-        newSelectedAreas = selectedAreas.filter(selected => selected.id !== area.id);
+        newSelectedAreas = selectedAreas.filter(
+          (selected) => selected.id !== area.id
+        );
       } else {
         // Add area to selection (but remove "semua" if present)
-        newSelectedAreas = [...selectedAreas.filter(selected => selected.id !== "semua"), area];
+        newSelectedAreas = [
+          ...selectedAreas.filter((selected) => selected.id !== "semua"),
+          area,
+        ];
       }
-      
+
       // If no areas selected, default to "semua"
       if (newSelectedAreas.length === 0) {
-        newSelectedAreas = [availableAreas.find(a => a.id === "semua")];
+        newSelectedAreas = [availableAreas.find((a) => a.id === "semua")];
         setSelectedAreas(newSelectedAreas);
         await loadAreaData(["semua"]);
       } else {
         setSelectedAreas(newSelectedAreas);
-        await loadAreaData(newSelectedAreas.map(a => a.id));
+        await loadAreaData(newSelectedAreas.map((a) => a.id));
       }
     }
-    
+
     setLoadingAreaId(null);
   };
 
@@ -223,8 +320,11 @@ const Map = () => {
     const data = allGeoJsonData[fileId];
     let color = "#2563eb"; // default color
 
-    // Use area-specific colors
-    if (selectedAreas.some(area => area.id === "semua") || selectedAreas.length > 1) {
+    // If "semua" is selected or multiple areas, use area-specific colors
+    if (
+      selectedAreas.some((area) => area.id === "semua") ||
+      selectedAreas.length > 1
+    ) {
       color = data?.areaColor || "#6b7280";
     } else if (selectedAreas.length === 1) {
       // Use selected area color for single area selection
@@ -233,9 +333,9 @@ const Map = () => {
 
     return {
       color: color,
-      weight: 4,
-      opacity: 1,
-      fillOpacity: 0.2,
+      weight: 2,
+      opacity: 0.8,
+      fillOpacity: 0.3,
       fillColor: color,
       dashArray: null,
     };
@@ -325,7 +425,6 @@ const Map = () => {
           {/* Content */}
           {!panelMinimized && (
             <div className="max-h-[70vh] overflow-y-auto">
-
               {/* Area Buttons */}
               <div className="p-4 space-y-2">
                 <h4 className="font-semibold text-gray-700 text-sm mb-3">
@@ -335,7 +434,7 @@ const Map = () => {
                 {/* Show All Areas - Special checkbox */}
                 <div
                   className={`w-full p-3 rounded-lg border-2 transition-all duration-200 mb-3 cursor-pointer ${
-                    selectedAreas.some(area => area.id === "semua")
+                    selectedAreas.some((area) => area.id === "semua")
                       ? "border-gray-600 bg-gray-50 text-gray-900"
                       : "border-gray-300 bg-white hover:border-gray-400 hover:shadow-md"
                   }`}
@@ -347,7 +446,9 @@ const Map = () => {
                     ) : (
                       <input
                         type="checkbox"
-                        checked={selectedAreas.some(area => area.id === "semua")}
+                        checked={selectedAreas.some(
+                          (area) => area.id === "semua"
+                        )}
                         onChange={() => {}}
                         className="w-4 h-4 text-gray-600 rounded"
                       />
@@ -371,7 +472,9 @@ const Map = () => {
                       key={area.id}
                       onClick={() => handleAreaToggle(area)}
                       className={`p-3 rounded-lg border-2 transition-all duration-200 text-left cursor-pointer ${
-                        selectedAreas.some(selected => selected.id === area.id)
+                        selectedAreas.some(
+                          (selected) => selected.id === area.id
+                        )
                           ? "border-blue-500 bg-blue-50 text-blue-900"
                           : "border-gray-200 bg-white hover:border-gray-300 hover:shadow-md"
                       }`}
@@ -382,7 +485,9 @@ const Map = () => {
                         ) : (
                           <input
                             type="checkbox"
-                            checked={selectedAreas.some(selected => selected.id === area.id)}
+                            checked={selectedAreas.some(
+                              (selected) => selected.id === area.id
+                            )}
                             onChange={() => {}}
                             className="w-4 h-4 text-blue-600 rounded"
                           />
@@ -414,40 +519,46 @@ const Map = () => {
                           className="w-3 h-3 rounded-full mr-2"
                           style={{ backgroundColor: area.color }}
                         ></div>
-                        <span className="font-medium text-gray-700">{area.name}</span>
-                        <span className="text-gray-500 ml-2">- {area.description}</span>
+                        <span className="font-medium text-gray-700">
+                          {area.name}
+                        </span>
+                        <span className="text-gray-500 ml-2">
+                          - {area.description}
+                        </span>
                       </div>
                     ))}
                   </div>
                   <div className="mt-2 text-xs text-green-700">
-                    🗺️ Menampilkan {selectedAreas.map(a => a.name).join(', ')}
+                    🗺️ Menampilkan {selectedAreas.map((a) => a.name).join(", ")}
                   </div>
                 </div>
               )}
 
               {/* Current Areas Legend */}
-              {selectedAreas.length > 0 && Object.keys(allGeoJsonData).length > 0 && (
-                <div className="border-t border-gray-200 p-4 bg-blue-50">
-                  <h5 className="font-semibold text-gray-700 text-sm mb-2">
-                    Kecamatan Ditampilkan ({Object.keys(allGeoJsonData).length})
-                  </h5>
-                  <div className="grid grid-cols-1 gap-1 text-xs max-h-32 overflow-y-auto">
-                    {Object.entries(allGeoJsonData).map(([fileId, data]) => (
-                      <div key={fileId} className="flex items-center">
-                        <div
-                          className="w-2 h-2 rounded-full mr-2"
-                          style={{
-                            backgroundColor: data?.areaColor || "#6b7280",
-                          }}
-                        ></div>
-                        <span className="text-gray-600">
-                          {data?.displayName || fileId.replace(/_/g, " ")}
-                        </span>
-                      </div>
-                    ))}
+              {selectedAreas.length > 0 &&
+                Object.keys(allGeoJsonData).length > 0 && (
+                  <div className="border-t border-gray-200 p-4 bg-blue-50">
+                    <h5 className="font-semibold text-gray-700 text-sm mb-2">
+                      Kecamatan Ditampilkan (
+                      {Object.keys(allGeoJsonData).length})
+                    </h5>
+                    <div className="grid grid-cols-1 gap-1 text-xs max-h-32 overflow-y-auto">
+                      {Object.entries(allGeoJsonData).map(([fileId, data]) => (
+                        <div key={fileId} className="flex items-center">
+                          <div
+                            className="w-2 h-2 rounded-full mr-2"
+                            style={{
+                              backgroundColor: data?.areaColor || "#6b7280",
+                            }}
+                          ></div>
+                          <span className="text-gray-600">
+                            {data?.displayName || fileId.replace(/_/g, " ")}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
             </div>
           )}
         </div>
@@ -477,7 +588,10 @@ const Map = () => {
                   let displayName =
                     data?.displayName || fileId.replace(/_/g, " ");
 
-                  if (selectedAreas.some(area => area.id === "semua") || selectedAreas.length > 1) {
+                  if (
+                    selectedAreas.some((area) => area.id === "semua") ||
+                    selectedAreas.length > 1
+                  ) {
                     // For "semua" mode, find all areas that have this same kecamatan
                     const currentKecamatan =
                       feature.properties.KECAMATAN ||
