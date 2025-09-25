@@ -31,7 +31,7 @@ const Map = () => {
     {
       id: "dalam_kota",
       name: "Dalam Kota (B1)",
-      color: "#dc2626",
+      color: "#1e3a8a",
       description: "Area Dalam Kota",
       type: "area",
       region: "bogor"
@@ -39,7 +39,7 @@ const Map = () => {
     {
       id: "jasinga",
       name: "Jasinga (B2)",
-      color: "#059669",
+      color: "#2563eb",
       description: "Area Jasinga",
       type: "area",
       region: "bogor"
@@ -47,7 +47,7 @@ const Map = () => {
     {
       id: "cisarua",
       name: "Cisarua (B3)",
-      color: "#0891b2",
+      color: "#0ea5e9",
       description: "Area Cisarua",
       type: "area",
       region: "bogor"
@@ -55,7 +55,7 @@ const Map = () => {
     {
       id: "cigombong",
       name: "Cigombong (B4)",
-      color: "#d97706",
+      color: "#38bdf8",
       description: "Area Cigombong",
       type: "area",
       region: "bogor"
@@ -70,7 +70,7 @@ const Map = () => {
     {
       id: "ciseeng",
       name: "Ciseeng (D1)",
-      color: "#7c3aed",
+      color: "#581c87",
       description: "Area Ciseeng",
       type: "area",
       region: "depok"
@@ -86,7 +86,7 @@ const Map = () => {
     {
       id: "citereup",
       name: "Citereup (D3)",
-      color: "#7c3aed",
+      color: "#a855f7",
       description: "Area Citereup",
       type: "area",
       region: "depok"
@@ -94,7 +94,7 @@ const Map = () => {
     {
       id: "klapanunggal",
       name: "Klapanunggal (D4)",
-      color: "#7c3aed",
+      color: "#c084fc",
       description: "Area Klapanunggal",
       type: "area",
       region: "depok"
@@ -106,8 +106,6 @@ const Map = () => {
     dalam_kota: [
       { file: "bogor_tengah.geojson", name: "Bogor Tengah", subArea: ["Jalan Roda", "Jalan Otista", "Jalan Padasuka", "Ruko Merdeka", "Jalan Dewi Sartika"] },
       { file: "bogor_utara.geojson", name: "Bogor Utara", subArea: "Jalan Klenteng" },
-      // { file: "bogor_timur.geojson", name: "Bogor Timur" },
-      // { file: "bogor_barat.geojson", name: "Bogor Barat" },
       { file: "tanah_sereal.geojson", name: "Tanah Sereal", subArea: "Pasar Bogor Bawah" },
     ],
     jasinga: [
@@ -122,10 +120,12 @@ const Map = () => {
       { file: "bojong_gede.geojson", name: "Bojong Gede" },
       { file: "cisarua.geojson", name: "Cisarua" },
       { file: "ciampea.geojson", name: "Ciampea" },
-      { file: "megamendung.geojson", name: "Megamendung" },
+      { file: "tanah_sereal.geojson", name: "Tanah Sereal", subArea: "Pasar Bogor Bawah" },
       { file: "tenjolaya.geojson", name: "Tenjolaya" },
-      { file: "cipayung(depok).geojson", name: "Cipayung (Depok)" },
+      { file: "bogor_barat.geojson", name: "Bogor Barat" },
       { file: "dramaga.geojson", name: "Dramaga" },
+      { file: "ranca_bungur.geojson", name: "Rancabungur" },
+      { file: "cipayung(depok).geojson", name: "Cipayung (Depok)" },
     ],
     cigombong: [
       { file: "cigombong.geojson", name: "Cigombong" },
@@ -332,19 +332,16 @@ const Map = () => {
     const data = allGeoJsonData[fileId];
     let color = "#2563eb"; // default color
 
-    // Use area-specific colors
+    // Use area-specific colors - always use individual area colors for better distinction
     if (selectedAreas.some(area => area.id === "semua")) {
-      // Only when "Semua Area" is specifically selected, unify colors by region
-      const areaInfo = availableAreas.find(a => a.id === data?.areaId);
-      if (areaInfo?.region === "bogor") {
-        // Use unified color for all Bogor areas when "semua" is selected
-        color = "#2563eb"; // Blue color for unified Bogor areas
-      } else if (areaInfo?.region === "depok") {
-        // Use unified color for all Depok areas when "semua" is selected
-        color = "#7c3aed"; // Purple color for unified Depok areas
-      } else {
-        color = data?.areaColor || "#6b7280";
-      }
+      // When "Semua Area" is selected, use individual area colors but keep regional harmony
+      color = data?.areaColor || "#6b7280";
+    } else if (selectedAreas.some(area => area.id === "semua_bogor")) {
+      // When "Semua Bogor" is selected, use individual Bogor area colors
+      color = data?.areaColor || "#2563eb";
+    } else if (selectedAreas.some(area => area.id === "semua_depok")) {
+      // When "Semua Depok" is selected, use individual Depok area colors
+      color = data?.areaColor || "#7c3aed";
     } else if (selectedAreas.length > 1) {
       // When multiple individual areas are selected, use their original colors
       color = data?.areaColor || "#6b7280";
@@ -354,10 +351,10 @@ const Map = () => {
     }
 
     return {
-      color: color,
-      weight: 0,
-      opacity: 0,
-      fillOpacity: 0.6,
+      color: "transparent", // No border
+      weight: 0, // No border thickness
+      opacity: 0, // No border opacity
+      fillOpacity: 0.8, // Higher fill opacity for better distinction
       fillColor: color,
       dashArray: null,
     };
