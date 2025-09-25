@@ -19,14 +19,14 @@ const Map = () => {
       name: "Semua Area",
       color: "#1f2937",
       description: "Tampilkan seluruh area",
-      type: "global"
+      type: "global",
     },
     {
       id: "semua_bogor",
       name: "Semua Bogor",
       color: "#2563eb",
       description: "Tampilkan seluruh area Bogor",
-      type: "regional"
+      type: "regional",
     },
     {
       id: "dalam_kota",
@@ -34,7 +34,7 @@ const Map = () => {
       color: "#1e3a8a",
       description: "Area Dalam Kota",
       type: "area",
-      region: "bogor"
+      region: "bogor",
     },
     {
       id: "jasinga",
@@ -42,7 +42,7 @@ const Map = () => {
       color: "#2563eb",
       description: "Area Jasinga",
       type: "area",
-      region: "bogor"
+      region: "bogor",
     },
     {
       id: "cisarua",
@@ -50,7 +50,7 @@ const Map = () => {
       color: "#0ea5e9",
       description: "Area Cisarua",
       type: "area",
-      region: "bogor"
+      region: "bogor",
     },
     {
       id: "cigombong",
@@ -58,14 +58,14 @@ const Map = () => {
       color: "#38bdf8",
       description: "Area Cigombong",
       type: "area",
-      region: "bogor"
+      region: "bogor",
     },
     {
       id: "semua_depok",
       name: "Semua Depok",
       color: "#7c3aed",
       description: "Tampilkan seluruh area Depok",
-      type: "regional"
+      type: "regional",
     },
     {
       id: "ciseeng",
@@ -73,7 +73,7 @@ const Map = () => {
       color: "#581c87",
       description: "Area Ciseeng",
       type: "area",
-      region: "depok"
+      region: "depok",
     },
     {
       id: "palsi",
@@ -81,7 +81,7 @@ const Map = () => {
       color: "#7c3aed",
       description: "Area Palsi",
       type: "area",
-      region: "depok"
+      region: "depok",
     },
     {
       id: "citereup",
@@ -89,7 +89,7 @@ const Map = () => {
       color: "#a855f7",
       description: "Area Citereup",
       type: "area",
-      region: "depok"
+      region: "depok",
     },
     {
       id: "klapanunggal",
@@ -97,16 +97,19 @@ const Map = () => {
       color: "#c084fc",
       description: "Area Klapanunggal",
       type: "area",
-      region: "depok"
+      region: "depok",
     },
   ];
 
   // All area files mapping - 4 regional divisions
   const areaFiles = {
     dalam_kota: [
-      { file: "bogor_tengah.geojson", name: "Bogor Tengah", subArea: ["Jalan Roda", "Jalan Otista", "Jalan Padasuka", "Ruko Merdeka", "Jalan Dewi Sartika"] },
-      { file: "bogor_utara.geojson", name: "Bogor Utara", subArea: "Jalan Klenteng" },
-      { file: "tanah_sereal.geojson", name: "Tanah Sereal", subArea: "Pasar Bogor Bawah" },
+      { file: "bogor_tengah.geojson", name: "Bogor Tengah" },
+      { file: "bogor_utara.geojson", name: "Bogor Utara" },
+      { file: "tanah_sereal.geojson", name: "Tanah Sereal" },
+      // { file: "bogor_tengah.geojson", name: "Bogor Tengah", subArea: ["Jalan Roda", "Jalan Otista", "Jalan Padasuka", "Ruko Merdeka", "Jalan Dewi Sartika"] },
+      // { file: "bogor_utara.geojson", name: "Bogor Utara", subArea: "Jalan Klenteng" },
+      // { file: "tanah_sereal.geojson", name: "Tanah Sereal", subArea: "Pasar Bogor Bawah" },
     ],
     jasinga: [
       { file: "leuwiliang.geojson", name: "Leuwiliang" },
@@ -120,7 +123,11 @@ const Map = () => {
       { file: "bojong_gede.geojson", name: "Bojong Gede" },
       { file: "cisarua.geojson", name: "Cisarua" },
       { file: "ciampea.geojson", name: "Ciampea" },
-      { file: "tanah_sereal.geojson", name: "Tanah Sereal", subArea: "Pasar Bogor Bawah" },
+      {
+        file: "tanah_sereal.geojson",
+        name: "Tanah Sereal",
+        subArea: "Pasar Bogor Bawah",
+      },
       { file: "tenjolaya.geojson", name: "Tenjolaya" },
       { file: "bogor_barat.geojson", name: "Bogor Barat" },
       { file: "dramaga.geojson", name: "Dramaga" },
@@ -266,13 +273,20 @@ const Map = () => {
         }
       }
 
-      console.log(`Loaded ${successCount}/${totalFiles} files for areas: ${areaIds.join(', ')}`);
+      console.log(
+        `Loaded ${successCount}/${totalFiles} files for areas: ${areaIds.join(
+          ", "
+        )}`
+      );
 
       if (successCount === 0) {
-        console.warn(`No files loaded for areas: ${areaIds.join(', ')}`);
+        console.warn(`No files loaded for areas: ${areaIds.join(", ")}`);
       }
     } catch (error) {
-      console.error(`Critical error loading areas ${areaIds.join(', ')}:`, error);
+      console.error(
+        `Critical error loading areas ${areaIds.join(", ")}:`,
+        error
+      );
     } finally {
       setAllGeoJsonData(dataMap);
       setVisibleLayers(initialVisibleLayers);
@@ -289,39 +303,47 @@ const Map = () => {
       await loadAreaData(["semua"]);
     } else if (area.id === "semua_bogor") {
       // If "Semua Bogor" is clicked, load all Bogor areas
-      const bogorAreas = availableAreas.filter(a => a.region === "bogor");
+      const bogorAreas = availableAreas.filter((a) => a.region === "bogor");
       setSelectedAreas([area]);
-      await loadAreaData(bogorAreas.map(a => a.id));
+      await loadAreaData(bogorAreas.map((a) => a.id));
     } else if (area.id === "semua_depok") {
       // If "Semua Depok" is clicked, load all Depok areas
-      const depokAreas = availableAreas.filter(a => a.region === "depok");
+      const depokAreas = availableAreas.filter((a) => a.region === "depok");
       setSelectedAreas([area]);
-      await loadAreaData(depokAreas.map(a => a.id));
+      await loadAreaData(depokAreas.map((a) => a.id));
     } else {
       // Toggle individual area selection
-      const isSelected = selectedAreas.some(selected => selected.id === area.id);
+      const isSelected = selectedAreas.some(
+        (selected) => selected.id === area.id
+      );
       let newSelectedAreas;
 
       if (isSelected) {
         // Remove area from selection
-        newSelectedAreas = selectedAreas.filter(selected => selected.id !== area.id);
+        newSelectedAreas = selectedAreas.filter(
+          (selected) => selected.id !== area.id
+        );
       } else {
         // Add area to selection (but remove regional selections if present)
-        newSelectedAreas = [...selectedAreas.filter(selected =>
-          selected.id !== "semua" &&
-          selected.id !== "semua_bogor" &&
-          selected.id !== "semua_depok"
-        ), area];
+        newSelectedAreas = [
+          ...selectedAreas.filter(
+            (selected) =>
+              selected.id !== "semua" &&
+              selected.id !== "semua_bogor" &&
+              selected.id !== "semua_depok"
+          ),
+          area,
+        ];
       }
 
       // If no areas selected, default to "semua"
       if (newSelectedAreas.length === 0) {
-        newSelectedAreas = [availableAreas.find(a => a.id === "semua")];
+        newSelectedAreas = [availableAreas.find((a) => a.id === "semua")];
         setSelectedAreas(newSelectedAreas);
         await loadAreaData(["semua"]);
       } else {
         setSelectedAreas(newSelectedAreas);
-        await loadAreaData(newSelectedAreas.map(a => a.id));
+        await loadAreaData(newSelectedAreas.map((a) => a.id));
       }
     }
 
@@ -333,13 +355,13 @@ const Map = () => {
     let color = "#2563eb"; // default color
 
     // Use area-specific colors - always use individual area colors for better distinction
-    if (selectedAreas.some(area => area.id === "semua")) {
+    if (selectedAreas.some((area) => area.id === "semua")) {
       // When "Semua Area" is selected, use individual area colors but keep regional harmony
       color = data?.areaColor || "#6b7280";
-    } else if (selectedAreas.some(area => area.id === "semua_bogor")) {
+    } else if (selectedAreas.some((area) => area.id === "semua_bogor")) {
       // When "Semua Bogor" is selected, use individual Bogor area colors
       color = data?.areaColor || "#2563eb";
-    } else if (selectedAreas.some(area => area.id === "semua_depok")) {
+    } else if (selectedAreas.some((area) => area.id === "semua_depok")) {
       // When "Semua Depok" is selected, use individual Depok area colors
       color = data?.areaColor || "#7c3aed";
     } else if (selectedAreas.length > 1) {
@@ -414,9 +436,7 @@ const Map = () => {
           <div className="w-5 h-5 relative flex items-center justify-center">
             <div
               className={`absolute h-0.5 bg-gray-600 transition-all duration-500 ease-out origin-center ${
-                panelVisible
-                  ? "w-4 rotate-45"
-                  : "w-full -translate-y-1.5"
+                panelVisible ? "w-4 rotate-45" : "w-full -translate-y-1.5"
               }`}
             ></div>
             <div
@@ -428,9 +448,7 @@ const Map = () => {
             ></div>
             <div
               className={`absolute h-0.5 bg-gray-600 transition-all duration-500 ease-out origin-center ${
-                panelVisible
-                  ? "w-4 -rotate-45"
-                  : "w-full translate-y-1.5"
+                panelVisible ? "w-4 -rotate-45" : "w-full translate-y-1.5"
               }`}
             ></div>
           </div>
@@ -453,9 +471,7 @@ const Map = () => {
                   {availableAreas.length} areas ready
                 </p>
               </div>
-              <div
-                className="text-white/80 hover:text-white transition-colors"
-              >
+              <div className="text-white/80 hover:text-white transition-colors">
                 <div
                   className={`transition-transform duration-200 ${
                     panelMinimized ? "rotate-180" : ""
@@ -482,7 +498,6 @@ const Map = () => {
           {/* Content */}
           {!panelMinimized && (
             <div className="max-h-[70vh] overflow-y-auto">
-
               {/* Area Buttons */}
               <div className="p-4 space-y-3">
                 <h4 className="font-semibold text-gray-700 text-sm mb-3">
@@ -490,138 +505,174 @@ const Map = () => {
                 </h4>
 
                 {/* Global Selection */}
-                {availableAreas.filter(area => area.type === "global").map((area) => (
-                  <div
-                    key={area.id}
-                    className={`w-full p-3 rounded-lg border-2 transition-all duration-200 mb-3 cursor-pointer ${
-                      selectedAreas.some(selected => selected.id === area.id)
-                        ? "border-gray-600 bg-gray-50 text-gray-900"
-                        : "border-gray-300 bg-white hover:border-gray-400 hover:shadow-md"
-                    }`}
-                    onClick={() => handleAreaToggle(area)}
-                  >
-                    <div className="flex items-center space-x-2 mb-1">
-                      {loadingAreaId === area.id ? (
-                        <div className="animate-spin w-4 h-4 border-2 border-gray-500 border-t-transparent rounded-full"></div>
-                      ) : (
-                        <input
-                          type="checkbox"
-                          checked={selectedAreas.some(selected => selected.id === area.id)}
-                          onChange={() => {}}
-                          className="w-4 h-4 text-gray-600 rounded"
-                        />
-                      )}
-                      <div
-                        className="w-3 h-3 rounded-full"
-                        style={{ backgroundColor: area.color }}
-                      ></div>
-                      <span className="font-medium text-sm">{area.name}</span>
+                {availableAreas
+                  .filter((area) => area.type === "global")
+                  .map((area) => (
+                    <div
+                      key={area.id}
+                      className={`w-full p-3 rounded-lg border-2 transition-all duration-200 mb-3 cursor-pointer ${
+                        selectedAreas.some(
+                          (selected) => selected.id === area.id
+                        )
+                          ? "border-gray-600 bg-gray-50 text-gray-900"
+                          : "border-gray-300 bg-white hover:border-gray-400 hover:shadow-md"
+                      }`}
+                      onClick={() => handleAreaToggle(area)}
+                    >
+                      <div className="flex items-center space-x-2 mb-1">
+                        {loadingAreaId === area.id ? (
+                          <div className="animate-spin w-4 h-4 border-2 border-gray-500 border-t-transparent rounded-full"></div>
+                        ) : (
+                          <input
+                            type="checkbox"
+                            checked={selectedAreas.some(
+                              (selected) => selected.id === area.id
+                            )}
+                            onChange={() => {}}
+                            className="w-4 h-4 text-gray-600 rounded"
+                          />
+                        )}
+                        <div
+                          className="w-3 h-3 rounded-full"
+                          style={{ backgroundColor: area.color }}
+                        ></div>
+                        <span className="font-medium text-sm">{area.name}</span>
+                      </div>
+                      <p className="text-xs text-gray-500 ml-6">
+                        {area.description}
+                      </p>
                     </div>
-                    <p className="text-xs text-gray-500 ml-6">{area.description}</p>
-                  </div>
-                ))}
+                  ))}
 
                 {/* Regional Selections */}
-                {availableAreas.filter(area => area.type === "regional").map((area) => (
-                  <div
-                    key={area.id}
-                    className={`w-full p-3 rounded-lg border-2 transition-all duration-200 mb-2 cursor-pointer ${
-                      selectedAreas.some(selected => selected.id === area.id)
-                        ? "border-blue-500 bg-blue-50 text-blue-900"
-                        : "border-blue-200 bg-white hover:border-blue-300 hover:shadow-md"
-                    }`}
-                    onClick={() => handleAreaToggle(area)}
-                  >
-                    <div className="flex items-center space-x-2 mb-1">
-                      {loadingAreaId === area.id ? (
-                        <div className="animate-spin w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full"></div>
-                      ) : (
-                        <input
-                          type="checkbox"
-                          checked={selectedAreas.some(selected => selected.id === area.id)}
-                          onChange={() => {}}
-                          className="w-4 h-4 text-blue-600 rounded"
-                        />
-                      )}
-                      <div
-                        className="w-3 h-3 rounded-full"
-                        style={{ backgroundColor: area.color }}
-                      ></div>
-                      <span className="font-medium text-sm">{area.name}</span>
+                {availableAreas
+                  .filter((area) => area.type === "regional")
+                  .map((area) => (
+                    <div
+                      key={area.id}
+                      className={`w-full p-3 rounded-lg border-2 transition-all duration-200 mb-2 cursor-pointer ${
+                        selectedAreas.some(
+                          (selected) => selected.id === area.id
+                        )
+                          ? "border-blue-500 bg-blue-50 text-blue-900"
+                          : "border-blue-200 bg-white hover:border-blue-300 hover:shadow-md"
+                      }`}
+                      onClick={() => handleAreaToggle(area)}
+                    >
+                      <div className="flex items-center space-x-2 mb-1">
+                        {loadingAreaId === area.id ? (
+                          <div className="animate-spin w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full"></div>
+                        ) : (
+                          <input
+                            type="checkbox"
+                            checked={selectedAreas.some(
+                              (selected) => selected.id === area.id
+                            )}
+                            onChange={() => {}}
+                            className="w-4 h-4 text-blue-600 rounded"
+                          />
+                        )}
+                        <div
+                          className="w-3 h-3 rounded-full"
+                          style={{ backgroundColor: area.color }}
+                        ></div>
+                        <span className="font-medium text-sm">{area.name}</span>
+                      </div>
+                      <p className="text-xs text-gray-500 ml-6">
+                        {area.description}
+                      </p>
                     </div>
-                    <p className="text-xs text-gray-500 ml-6">{area.description}</p>
-                  </div>
-                ))}
+                  ))}
 
                 {/* Bogor Areas */}
                 <div className="space-y-2">
-                  <h5 className="font-medium text-gray-600 text-xs mb-2 pl-2">WILAYAH BOGOR</h5>
+                  <h5 className="font-medium text-gray-600 text-xs mb-2 pl-2">
+                    WILAYAH BOGOR
+                  </h5>
                   <div className="grid grid-cols-2 gap-2">
-                    {availableAreas.filter(area => area.region === "bogor").map((area) => (
-                      <div
-                        key={area.id}
-                        onClick={() => handleAreaToggle(area)}
-                        className={`p-3 rounded-lg border-2 transition-all duration-200 text-left cursor-pointer ${
-                          selectedAreas.some(selected => selected.id === area.id)
-                            ? "border-red-500 bg-red-50 text-red-900"
-                            : "border-gray-200 bg-white hover:border-gray-300 hover:shadow-md"
-                        }`}
-                      >
-                        <div className="flex items-center space-x-2 mb-1">
-                          {loadingAreaId === area.id ? (
-                            <div className="animate-spin w-3 h-3 border-2 border-red-500 border-t-transparent rounded-full"></div>
-                          ) : (
-                            <input
-                              type="checkbox"
-                              checked={selectedAreas.some(selected => selected.id === area.id)}
-                              onChange={() => {}}
-                              className="w-3 h-3 text-red-600 rounded"
-                            />
-                          )}
-                          <div
-                            className="w-2 h-2 rounded-full"
-                            style={{ backgroundColor: area.color }}
-                          ></div>
-                          <span className="font-medium text-xs">{area.name}</span>
+                    {availableAreas
+                      .filter((area) => area.region === "bogor")
+                      .map((area) => (
+                        <div
+                          key={area.id}
+                          onClick={() => handleAreaToggle(area)}
+                          className={`p-3 rounded-lg border-2 transition-all duration-200 text-left cursor-pointer ${
+                            selectedAreas.some(
+                              (selected) => selected.id === area.id
+                            )
+                              ? "border-red-500 bg-red-50 text-red-900"
+                              : "border-gray-200 bg-white hover:border-gray-300 hover:shadow-md"
+                          }`}
+                        >
+                          <div className="flex items-center space-x-2 mb-1">
+                            {loadingAreaId === area.id ? (
+                              <div className="animate-spin w-3 h-3 border-2 border-red-500 border-t-transparent rounded-full"></div>
+                            ) : (
+                              <input
+                                type="checkbox"
+                                checked={selectedAreas.some(
+                                  (selected) => selected.id === area.id
+                                )}
+                                onChange={() => {}}
+                                className="w-3 h-3 text-red-600 rounded"
+                              />
+                            )}
+                            <div
+                              className="w-2 h-2 rounded-full"
+                              style={{ backgroundColor: area.color }}
+                            ></div>
+                            <span className="font-medium text-xs">
+                              {area.name}
+                            </span>
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      ))}
                   </div>
                 </div>
 
                 {/* Depok Areas */}
                 <div className="space-y-2">
-                  <h5 className="font-medium text-gray-600 text-xs mb-2 pl-2">WILAYAH DEPOK</h5>
+                  <h5 className="font-medium text-gray-600 text-xs mb-2 pl-2">
+                    WILAYAH DEPOK
+                  </h5>
                   <div className="grid grid-cols-2 gap-2">
-                    {availableAreas.filter(area => area.region === "depok").map((area) => (
-                      <div
-                        key={area.id}
-                        onClick={() => handleAreaToggle(area)}
-                        className={`p-3 rounded-lg border-2 transition-all duration-200 text-left cursor-pointer ${
-                          selectedAreas.some(selected => selected.id === area.id)
-                            ? "border-purple-500 bg-purple-50 text-purple-900"
-                            : "border-gray-200 bg-white hover:border-gray-300 hover:shadow-md"
-                        }`}
-                      >
-                        <div className="flex items-center space-x-2 mb-1">
-                          {loadingAreaId === area.id ? (
-                            <div className="animate-spin w-3 h-3 border-2 border-purple-500 border-t-transparent rounded-full"></div>
-                          ) : (
-                            <input
-                              type="checkbox"
-                              checked={selectedAreas.some(selected => selected.id === area.id)}
-                              onChange={() => {}}
-                              className="w-3 h-3 text-purple-600 rounded"
-                            />
-                          )}
-                          <div
-                            className="w-2 h-2 rounded-full"
-                            style={{ backgroundColor: area.color }}
-                          ></div>
-                          <span className="font-medium text-xs">{area.name}</span>
+                    {availableAreas
+                      .filter((area) => area.region === "depok")
+                      .map((area) => (
+                        <div
+                          key={area.id}
+                          onClick={() => handleAreaToggle(area)}
+                          className={`p-3 rounded-lg border-2 transition-all duration-200 text-left cursor-pointer ${
+                            selectedAreas.some(
+                              (selected) => selected.id === area.id
+                            )
+                              ? "border-purple-500 bg-purple-50 text-purple-900"
+                              : "border-gray-200 bg-white hover:border-gray-300 hover:shadow-md"
+                          }`}
+                        >
+                          <div className="flex items-center space-x-2 mb-1">
+                            {loadingAreaId === area.id ? (
+                              <div className="animate-spin w-3 h-3 border-2 border-purple-500 border-t-transparent rounded-full"></div>
+                            ) : (
+                              <input
+                                type="checkbox"
+                                checked={selectedAreas.some(
+                                  (selected) => selected.id === area.id
+                                )}
+                                onChange={() => {}}
+                                className="w-3 h-3 text-purple-600 rounded"
+                              />
+                            )}
+                            <div
+                              className="w-2 h-2 rounded-full"
+                              style={{ backgroundColor: area.color }}
+                            ></div>
+                            <span className="font-medium text-xs">
+                              {area.name}
+                            </span>
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      ))}
                   </div>
                 </div>
               </div>
@@ -639,8 +690,12 @@ const Map = () => {
                           className="w-3 h-3 rounded-full mr-2"
                           style={{ backgroundColor: area.color }}
                         ></div>
-                        <span className="font-medium text-gray-700">{area.name}</span>
-                        <span className="text-gray-500 ml-2">- {area.description}</span>
+                        <span className="font-medium text-gray-700">
+                          {area.name}
+                        </span>
+                        <span className="text-gray-500 ml-2">
+                          - {area.description}
+                        </span>
                       </div>
                     ))}
                   </div>
@@ -653,7 +708,10 @@ const Map = () => {
                         <span
                           key={index}
                           className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full"
-                          style={{ backgroundColor: `${area.color}20`, color: area.color }}
+                          style={{
+                            backgroundColor: `${area.color}20`,
+                            color: area.color,
+                          }}
                         >
                           {area.name}
                         </span>
@@ -664,28 +722,30 @@ const Map = () => {
               )}
 
               {/* Current Areas Legend */}
-              {selectedAreas.length > 0 && Object.keys(allGeoJsonData).length > 0 && (
-                <div className="border-t border-gray-200 p-4 bg-blue-50">
-                  <h5 className="font-semibold text-gray-700 text-sm mb-2">
-                    Kecamatan Ditampilkan ({Object.keys(allGeoJsonData).length})
-                  </h5>
-                  <div className="grid grid-cols-1 gap-1 text-xs max-h-32 overflow-y-auto">
-                    {Object.entries(allGeoJsonData).map(([fileId, data]) => (
-                      <div key={fileId} className="flex items-center">
-                        <div
-                          className="w-2 h-2 rounded-full mr-2"
-                          style={{
-                            backgroundColor: data?.areaColor || "#6b7280",
-                          }}
-                        ></div>
-                        <span className="text-gray-600">
-                          {data?.displayName || fileId.replace(/_/g, " ")}
-                        </span>
-                      </div>
-                    ))}
+              {selectedAreas.length > 0 &&
+                Object.keys(allGeoJsonData).length > 0 && (
+                  <div className="border-t border-gray-200 p-4 bg-blue-50">
+                    <h5 className="font-semibold text-gray-700 text-sm mb-2">
+                      Kecamatan Ditampilkan (
+                      {Object.keys(allGeoJsonData).length})
+                    </h5>
+                    <div className="grid grid-cols-1 gap-1 text-xs max-h-32 overflow-y-auto">
+                      {Object.entries(allGeoJsonData).map(([fileId, data]) => (
+                        <div key={fileId} className="flex items-center">
+                          <div
+                            className="w-2 h-2 rounded-full mr-2"
+                            style={{
+                              backgroundColor: data?.areaColor || "#6b7280",
+                            }}
+                          ></div>
+                          <span className="text-gray-600">
+                            {data?.displayName || fileId.replace(/_/g, " ")}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
             </div>
           )}
         </div>
@@ -700,7 +760,7 @@ const Map = () => {
         attributionControl={false}
       >
         <TileLayer
-          attribution=''
+          attribution=""
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
@@ -716,10 +776,12 @@ const Map = () => {
                   let displayName =
                     data?.displayName || fileId.replace(/_/g, " ");
 
-                  if (selectedAreas.some(area => area.id === "semua") ||
-                      selectedAreas.some(area => area.id === "semua_bogor") ||
-                      selectedAreas.some(area => area.id === "semua_depok") ||
-                      selectedAreas.length > 1) {
+                  if (
+                    selectedAreas.some((area) => area.id === "semua") ||
+                    selectedAreas.some((area) => area.id === "semua_bogor") ||
+                    selectedAreas.some((area) => area.id === "semua_depok") ||
+                    selectedAreas.length > 1
+                  ) {
                     // For "semua" mode, find all areas that have this same kecamatan
                     const currentKecamatan =
                       feature.properties.KECAMATAN ||
@@ -760,7 +822,15 @@ const Map = () => {
                     const popupContent = `
                       <div>
                         <h4 style="margin: 0 0 8px 0; color: #2563eb; font-weight: bold;">${displayName}</h4>
-                        ${data?.subArea ? `<p style="margin: 0 0 8px 0; color: #059669; font-weight: 500;">Sub Area: ${Array.isArray(data.subArea) ? data.subArea.join(", ") : data.subArea}</p>` : ""}
+                        ${
+                          data?.subArea
+                            ? `<p style="margin: 0 0 8px 0; color: #059669; font-weight: 500;">Sub Area: ${
+                                Array.isArray(data.subArea)
+                                  ? data.subArea.join(", ")
+                                  : data.subArea
+                              }</p>`
+                            : ""
+                        }
                         <div style="margin: 0 0 8px 0;">
                           ${relatedAreas
                             .map(
@@ -786,7 +856,15 @@ const Map = () => {
                     const popupContent = `
                       <div>
                         <h4 style="margin: 0 0 8px 0; color: ${areaColor}; font-weight: bold;">${displayName}</h4>
-                        ${data?.subArea ? `<p style="margin: 0 0 8px 0; color: #059669; font-weight: 500;">Sub Area: ${Array.isArray(data.subArea) ? data.subArea.join(", ") : data.subArea}</p>` : ""}
+                        ${
+                          data?.subArea
+                            ? `<p style="margin: 0 0 8px 0; color: #059669; font-weight: 500;">Sub Area: ${
+                                Array.isArray(data.subArea)
+                                  ? data.subArea.join(", ")
+                                  : data.subArea
+                              }</p>`
+                            : ""
+                        }
                         ${
                           areaName
                             ? `<p style="margin: 0 0 8px 0; color: #6b7280; font-size: 12px;">${areaName}</p>`
