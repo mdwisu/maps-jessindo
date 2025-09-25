@@ -70,7 +70,7 @@ const Map = () => {
     {
       id: "ciseeng",
       name: "Ciseeng (D1)",
-      color: "#a855f7",
+      color: "#7c3aed",
       description: "Area Ciseeng",
       type: "area",
       region: "depok"
@@ -78,7 +78,7 @@ const Map = () => {
     {
       id: "palsi",
       name: "Palsi (D2)",
-      color: "#8b5cf6",
+      color: "#7c3aed",
       description: "Area Palsi",
       type: "area",
       region: "depok"
@@ -94,7 +94,7 @@ const Map = () => {
     {
       id: "klapanunggal",
       name: "Klapanunggal (D4)",
-      color: "#6d28d9",
+      color: "#7c3aed",
       description: "Area Klapanunggal",
       type: "area",
       region: "depok"
@@ -125,6 +125,7 @@ const Map = () => {
       { file: "megamendung.geojson", name: "Megamendung" },
       { file: "tenjolaya.geojson", name: "Tenjolaya" },
       { file: "cipayung(depok).geojson", name: "Cipayung (Depok)" },
+      { file: "dramaga.geojson", name: "Dramaga" },
     ],
     cigombong: [
       { file: "cigombong.geojson", name: "Cigombong" },
@@ -332,7 +333,20 @@ const Map = () => {
     let color = "#2563eb"; // default color
 
     // Use area-specific colors
-    if (selectedAreas.some(area => area.id === "semua") || selectedAreas.length > 1) {
+    if (selectedAreas.some(area => area.id === "semua")) {
+      // Only when "Semua Area" is specifically selected, unify colors by region
+      const areaInfo = availableAreas.find(a => a.id === data?.areaId);
+      if (areaInfo?.region === "bogor") {
+        // Use unified color for all Bogor areas when "semua" is selected
+        color = "#2563eb"; // Blue color for unified Bogor areas
+      } else if (areaInfo?.region === "depok") {
+        // Use unified color for all Depok areas when "semua" is selected
+        color = "#7c3aed"; // Purple color for unified Depok areas
+      } else {
+        color = data?.areaColor || "#6b7280";
+      }
+    } else if (selectedAreas.length > 1) {
+      // When multiple individual areas are selected, use their original colors
       color = data?.areaColor || "#6b7280";
     } else if (selectedAreas.length === 1) {
       // Use selected area color for single area selection
