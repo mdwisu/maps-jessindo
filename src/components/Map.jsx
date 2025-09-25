@@ -644,8 +644,21 @@ const Map = () => {
                       </div>
                     ))}
                   </div>
-                  <div className="mt-2 text-xs text-green-700">
-                    🗺️ Menampilkan {selectedAreas.map(a => a.name).join(', ')}
+                  <div className="mt-2">
+                    <p className="text-xs text-green-700 mb-1">
+                      🗺️ Menampilkan {selectedAreas.length} area:
+                    </p>
+                    <div className="flex flex-wrap gap-1 max-h-16 overflow-y-auto">
+                      {selectedAreas.map((area, index) => (
+                        <span
+                          key={index}
+                          className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full"
+                          style={{ backgroundColor: `${area.color}20`, color: area.color }}
+                        >
+                          {area.name}
+                        </span>
+                      ))}
+                    </div>
                   </div>
                 </div>
               )}
