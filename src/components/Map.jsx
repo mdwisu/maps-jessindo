@@ -123,11 +123,8 @@ const Map = () => {
       { file: "bojong_gede.geojson", name: "Bojong Gede" },
       { file: "cisarua.geojson", name: "Cisarua" },
       { file: "ciampea.geojson", name: "Ciampea" },
-      {
-        file: "tanah_sereal.geojson",
-        name: "Tanah Sereal",
-        subArea: "Pasar Bogor Bawah",
-      },
+      { file: "tanah_sereal.geojson", name: "Tanah Sereal" },
+      // {file: "tanah_sereal.geojson",name: "Tanah Sereal", subArea: "Pasar Bogor Bawah"},
       { file: "tenjolaya.geojson", name: "Tenjolaya" },
       { file: "bogor_barat.geojson", name: "Bogor Barat" },
       { file: "dramaga.geojson", name: "Dramaga" },
