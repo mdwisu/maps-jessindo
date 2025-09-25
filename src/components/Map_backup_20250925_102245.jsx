@@ -355,9 +355,9 @@ const Map = () => {
 
     return {
       color: color,
-      weight: 0,
-      opacity: 0,
-      fillOpacity: 0.6,
+      weight: 4,
+      opacity: 1,
+      fillOpacity: 0.2,
       fillColor: color,
       dashArray: null,
     };
@@ -706,10 +706,7 @@ const Map = () => {
                   let displayName =
                     data?.displayName || fileId.replace(/_/g, " ");
 
-                  if (selectedAreas.some(area => area.id === "semua") ||
-                      selectedAreas.some(area => area.id === "semua_bogor") ||
-                      selectedAreas.some(area => area.id === "semua_depok") ||
-                      selectedAreas.length > 1) {
+                  if (selectedAreas.some(area => area.id === "semua") || selectedAreas.length > 1) {
                     // For "semua" mode, find all areas that have this same kecamatan
                     const currentKecamatan =
                       feature.properties.KECAMATAN ||
