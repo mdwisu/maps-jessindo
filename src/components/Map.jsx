@@ -1,8 +1,10 @@
 import { useState, useEffect, useRef } from "react";
 import { MapContainer, TileLayer, GeoJSON, Marker, Polyline, Popup, useMap } from "react-leaflet";
-import L from "leaflet";
 import SalesmanSchedule from "./SalesmanSchedule.jsx";
 import { subAreaLocations } from "../data/subAreaLocations.js";
+import { availableAreas, areaFiles, DEFAULT_MAP_CENTER, DEFAULT_MAP_ZOOM } from "../constants/areaData.js";
+import { createIcon, zoomToSubArea as zoomToSubAreaHelper, geoJsonStyle as geoJsonStyleHelper } from "../utils/mapHelpers.js";
+import { showCoordinateToast } from "../utils/coordinateToast.js";
 import "leaflet/dist/leaflet.css";
 
 const Map = () => {
@@ -17,165 +19,6 @@ const Map = () => {
   const [selectedSubArea, setSelectedSubArea] = useState(null);
   const [showSubAreaList, setShowSubAreaList] = useState(false);
   const mapRef = useRef(null);
-
-  // Area folders based on public/data directory structure
-  const availableAreas = [
-    {
-      id: "semua",
-      name: "Semua Area",
-      color: "#1f2937",
-      description: "Tampilkan seluruh area",
-      type: "global",
-    },
-    {
-      id: "semua_bogor",
-      name: "Semua Bogor",
-      color: "#2563eb",
-      description: "Tampilkan seluruh area Bogor",
-      type: "regional",
-    },
-    {
-      id: "dalam_kota",
-      name: "Dalam Kota (B1)",
-      color: "#1e3a8a",
-      description: "Area Dalam Kota",
-      type: "area",
-      region: "bogor",
-    },
-    {
-      id: "jasinga",
-      name: "Jasinga (B2)",
-      color: "#2563eb",
-      description: "Area Jasinga",
-      type: "area",
-      region: "bogor",
-    },
-    {
-      id: "cisarua",
-      name: "Cisarua (B3)",
-      color: "#0ea5e9",
-      description: "Area Cisarua",
-      type: "area",
-      region: "bogor",
-    },
-    {
-      id: "cigombong",
-      name: "Cigombong (B4)",
-      color: "#38bdf8",
-      description: "Area Cigombong",
-      type: "area",
-      region: "bogor",
-    },
-    {
-      id: "semua_depok",
-      name: "Semua Depok",
-      color: "#7c3aed",
-      description: "Tampilkan seluruh area Depok",
-      type: "regional",
-    },
-    {
-      id: "ciseeng",
-      name: "Ciseeng (D1)",
-      color: "#581c87",
-      description: "Area Ciseeng",
-      type: "area",
-      region: "depok",
-    },
-    {
-      id: "palsi",
-      name: "Palsi (D2)",
-      color: "#7c3aed",
-      description: "Area Palsi",
-      type: "area",
-      region: "depok",
-    },
-    {
-      id: "citereup",
-      name: "Citereup (D3)",
-      color: "#a855f7",
-      description: "Area Citereup",
-      type: "area",
-      region: "depok",
-    },
-    {
-      id: "klapanunggal",
-      name: "Klapanunggal (D4)",
-      color: "#c084fc",
-      description: "Area Klapanunggal",
-      type: "area",
-      region: "depok",
-    },
-  ];
-
-  // All area files mapping - 4 regional divisions
-  const areaFiles = {
-    dalam_kota: [
-      { file: "bogor_tengah.geojson", name: "Bogor Tengah" },
-      { file: "bogor_utara.geojson", name: "Bogor Utara" },
-      { file: "tanah_sereal.geojson", name: "Tanah Sereal" },
-      // { file: "bogor_tengah.geojson", name: "Bogor Tengah", subArea: ["Jalan Roda", "Jalan Otista", "Jalan Padasuka", "Ruko Merdeka", "Jalan Dewi Sartika"] },
-      // { file: "bogor_utara.geojson", name: "Bogor Utara", subArea: "Jalan Klenteng" },
-      // { file: "tanah_sereal.geojson", name: "Tanah Sereal", subArea: "Pasar Bogor Bawah" },
-    ],
-    jasinga: [
-      { file: "leuwiliang.geojson", name: "Leuwiliang" },
-      { file: "cigudeg.geojson", name: "Cigudeg" },
-      { file: "nanggung.geojson", name: "Nanggung" },
-      { file: "cibangbulang.geojson", name: "Cibangbulang" },
-      { file: "jasinga.geojson", name: "Jasinga" },
-      { file: "pamijahan.geojson", name: "Pamijahan" },
-    ],
-    cisarua: [
-      { file: "bojong_gede.geojson", name: "Bojong Gede" },
-      { file: "cisarua.geojson", name: "Cisarua" },
-      { file: "ciampea.geojson", name: "Ciampea" },
-      { file: "tanah_sereal.geojson", name: "Tanah Sereal" },
-      // {file: "tanah_sereal.geojson",name: "Tanah Sereal", subArea: "Pasar Bogor Bawah"},
-      { file: "tenjolaya.geojson", name: "Tenjolaya" },
-      { file: "bogor_barat.geojson", name: "Bogor Barat" },
-      { file: "dramaga.geojson", name: "Dramaga" },
-      { file: "ranca_bungur.geojson", name: "Rancabungur" },
-      { file: "cipayung(depok).geojson", name: "Cipayung (Depok)" },
-    ],
-    cigombong: [
-      { file: "cigombong.geojson", name: "Cigombong" },
-      { file: "cijeruk.geojson", name: "Cijeruk" },
-      { file: "caringin.geojson", name: "Caringin" },
-      { file: "ciawi.geojson", name: "Ciawi" },
-      { file: "bogor_selatan.geojson", name: "Bogor Selatan" },
-      { file: "bogor_timur.geojson", name: "Bogor Timur" },
-      { file: "bogor_utara.geojson", name: "Bogor Utara" },
-      { file: "sukaraja.geojson", name: "Sukaraja" },
-    ],
-    ciseeng: [
-      { file: "ciseeng.geojson", name: "Ciseeng" },
-      { file: "limo.geojson", name: "Limo" },
-      { file: "pancoran_mas.geojson", name: "Pancoran Mas" },
-      { file: "parung.geojson", name: "Parung" },
-      { file: "beji.geojson", name: "Beji" },
-      { file: "tajurhalang.geojson", name: "Tajur Halang" },
-      // snack
-      { file: "sawangan.geojson", name: "Sawangan" },
-    ],
-    palsi: [
-      { file: "cimanggis.geojson", name: "Cimanggis" },
-      { file: "tapos.geojson", name: "Tapos" },
-      { file: "sukmajaya.geojson", name: "Sukma Jaya" },
-      { file: "cilodong.geojson", name: "Cilodong" },
-    ],
-    citereup: [
-      { file: "citeureup.geojson", name: "Citereup" },
-      { file: "cibinong.geojson", name: "Cibinong" },
-      { file: "babakan_madang.geojson", name: "Babakan Madang" },
-    ],
-    klapanunggal: [
-      { file: "klapanunggal.geojson", name: "Klapanunggal" },
-      { file: "jonggol.geojson", name: "Jonggol" },
-      { file: "cariu.geojson", name: "Cariu" },
-      { file: "cileungsi.geojson", name: "Cileungsi" },
-      { file: "gunung_putri.geojson", name: "Gunung Putri" },
-    ],
-  };
 
   // Function to load all areas on initial load
   const loadAllAreasInitial = async () => {
@@ -353,37 +196,6 @@ const Map = () => {
     setLoadingAreaId(null);
   };
 
-  const geoJsonStyle = (fileId) => (feature) => {
-    const data = allGeoJsonData[fileId];
-    let color = "#2563eb"; // default color
-
-    // Use area-specific colors - always use individual area colors for better distinction
-    if (selectedAreas.some((area) => area.id === "semua")) {
-      // When "Semua Area" is selected, use individual area colors but keep regional harmony
-      color = data?.areaColor || "#6b7280";
-    } else if (selectedAreas.some((area) => area.id === "semua_bogor")) {
-      // When "Semua Bogor" is selected, use individual Bogor area colors
-      color = data?.areaColor || "#2563eb";
-    } else if (selectedAreas.some((area) => area.id === "semua_depok")) {
-      // When "Semua Depok" is selected, use individual Depok area colors
-      color = data?.areaColor || "#7c3aed";
-    } else if (selectedAreas.length > 1) {
-      // When multiple individual areas are selected, use their original colors
-      color = data?.areaColor || "#6b7280";
-    } else if (selectedAreas.length === 1) {
-      // Use selected area color for single area selection
-      color = selectedAreas[0].color;
-    }
-
-    return {
-      color: "transparent", // No border
-      weight: 0, // No border thickness
-      opacity: 0, // No border opacity
-      fillOpacity: 0.8, // Higher fill opacity for better distinction
-      fillColor: color,
-      dashArray: null,
-    };
-  };
 
   const onEachFeature = (feature, layer) => {
     if (feature.properties) {
@@ -394,155 +206,7 @@ const Map = () => {
     }
   };
 
-  // Default center to Bogor area
-  const center = [-6.5944, 106.7892];
   const [showSchedule, setShowSchedule] = useState(false);
-
-  // Custom icons for sub areas
-  const createIcon = (type) => {
-    const iconConfig = {
-      street: {
-        html: `<div style="background: #3b82f6; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="white">
-            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
-          </svg>
-        </div>`,
-        iconSize: [24, 24],
-        iconAnchor: [12, 12]
-      },
-      market: {
-        html: `<div style="background: #10b981; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
-            <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
-          </svg>
-        </div>`,
-        iconSize: [28, 28],
-        iconAnchor: [14, 14]
-      },
-      store: {
-        html: `<div style="background: #f59e0b; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="white">
-            <path d="M20 4H4v2h16V4zm1 10v-2l-1-5H4l-1 5v2h1v6h10v-6h4v6h2v-6h1zm-9 4H6v-4h6v4z"/>
-          </svg>
-        </div>`,
-        iconSize: [26, 26],
-        iconAnchor: [13, 13]
-      }
-    };
-
-    const config = iconConfig[type] || iconConfig.street;
-    return L.divIcon({
-      html: config.html,
-      iconSize: config.iconSize,
-      iconAnchor: config.iconAnchor,
-      className: ''
-    });
-  };
-
-  // Function to show coordinate toast with copy button
-  const showCoordinateToast = (lat, lng) => {
-    const coordString = `[-${Math.abs(lat).toFixed(6)}, ${lng.toFixed(6)}]`;
-    console.log('📍 Koordinat diklik:', coordString);
-    console.log('📋 Copy untuk subAreaLocations.js:', `coords: ${coordString}`);
-
-    // Remove all existing toasts (remove by class to catch any old versions)
-    document.querySelectorAll('[id^="coord-toast"]').forEach(el => {
-      const parent = el.parentElement;
-      if (parent && document.body.contains(parent)) {
-        document.body.removeChild(parent);
-      }
-    });
-
-    // Show toast notification with copy button
-    const toast = document.createElement('div');
-    toast.innerHTML = `
-      <div id="coord-toast" style="position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 10001; background: #1f2937; color: white; padding: 16px 20px; border-radius: 12px; box-shadow: 0 8px 16px rgba(0,0,0,0.4); font-size: 13px; min-width: 350px; animation: slideUp 0.3s ease-out;">
-        <div style="font-weight: bold; margin-bottom: 10px; font-size: 14px;">📍 Koordinat Diklik (Dev Mode)</div>
-        <div style="font-family: monospace; font-size: 12px; background: #374151; padding: 8px 10px; border-radius: 6px; margin-bottom: 10px; text-align: center; letter-spacing: 0.5px;">${coordString}</div>
-        <button id="copy-coord-btn" style="width: 100%; background: #3b82f6; color: white; border: none; padding: 10px 16px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; transition: all 0.2s; box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);">
-          📋 Klik untuk Copy
-        </button>
-      </div>
-    `;
-
-    // Add animation keyframes if not exists
-    if (!document.getElementById('toast-animation-style')) {
-      const style = document.createElement('style');
-      style.id = 'toast-animation-style';
-      style.textContent = `
-        @keyframes slideUp {
-          from {
-            transform: translateX(-50%) translateY(20px);
-            opacity: 0;
-          }
-          to {
-            transform: translateX(-50%) translateY(0);
-            opacity: 1;
-          }
-        }
-      `;
-      document.head.appendChild(style);
-    }
-
-    document.body.appendChild(toast);
-
-    // Add copy functionality
-    const copyBtn = document.getElementById('copy-coord-btn');
-    copyBtn.addEventListener('click', () => {
-      navigator.clipboard.writeText(coordString).then(() => {
-        copyBtn.textContent = '✅ Tersalin ke Clipboard!';
-        copyBtn.style.background = '#10b981';
-        copyBtn.style.boxShadow = '0 2px 4px rgba(16, 185, 129, 0.3)';
-      });
-    });
-
-    // Hover effect
-    copyBtn.addEventListener('mouseenter', () => {
-      if (!copyBtn.textContent.includes('Tersalin')) {
-        copyBtn.style.background = '#2563eb';
-        copyBtn.style.transform = 'scale(1.02)';
-      }
-    });
-    copyBtn.addEventListener('mouseleave', () => {
-      if (!copyBtn.textContent.includes('Tersalin')) {
-        copyBtn.style.background = '#3b82f6';
-        copyBtn.style.transform = 'scale(1)';
-      }
-    });
-
-    setTimeout(() => {
-      if (document.body.contains(toast)) {
-        toast.style.transition = 'opacity 0.3s ease-out';
-        toast.style.opacity = '0';
-        setTimeout(() => {
-          if (document.body.contains(toast)) {
-            document.body.removeChild(toast);
-          }
-        }, 300);
-      }
-    }, 6000);
-  };
-
-  // Function to zoom to sub area location
-  const zoomToSubArea = (location) => {
-    if (!mapRef.current) return;
-
-    const map = mapRef.current;
-
-    if (location.type === "street" && Array.isArray(location.coords[0])) {
-      // For streets (polyline), fit bounds to show entire line
-      const bounds = L.latLngBounds(location.coords);
-      map.fitBounds(bounds, { padding: [50, 50], maxZoom: 16 });
-    } else {
-      // For markers, center and zoom to point
-      const position = Array.isArray(location.coords[0])
-        ? location.coords[0]
-        : location.coords;
-      map.setView(position, 17, { animate: true, duration: 1 });
-    }
-
-    setSelectedSubArea(location);
-  };
 
   // Component to access map instance and handle click events
   const MapEvents = () => {
@@ -927,7 +591,7 @@ const Map = () => {
                           return (
                             <div
                               key={index}
-                              onClick={() => zoomToSubArea(location)}
+                              onClick={() => zoomToSubAreaHelper(mapRef, location, setSelectedSubArea)}
                               className={`flex items-center space-x-2 p-2 rounded cursor-pointer transition-all ${
                                 selectedSubArea?.name === location.name
                                   ? 'bg-blue-100 border border-blue-300'
@@ -1043,8 +707,8 @@ const Map = () => {
 
       {/* Map */}
       <MapContainer
-        center={center}
-        zoom={11}
+        center={DEFAULT_MAP_CENTER}
+        zoom={DEFAULT_MAP_ZOOM}
         style={{ height: "100vh", width: "100vw" }}
         zoomControl={false}
         attributionControl={false}
@@ -1060,7 +724,7 @@ const Map = () => {
             <GeoJSON
               key={fileId}
               data={data}
-              style={geoJsonStyle(fileId)}
+              style={geoJsonStyleHelper(fileId, allGeoJsonData, selectedAreas)}
               onEachFeature={(feature, layer) => {
                 // Add click handler to show coordinates
                 layer.on('click', (e) => {

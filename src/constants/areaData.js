@@ -1,0 +1,157 @@
+// Available areas configuration
+export const availableAreas = [
+  {
+    id: "semua",
+    name: "Semua Area",
+    color: "#1f2937",
+    description: "Tampilkan seluruh area",
+    type: "global",
+  },
+  {
+    id: "semua_bogor",
+    name: "Semua Bogor",
+    color: "#2563eb",
+    description: "Tampilkan seluruh area Bogor",
+    type: "regional",
+  },
+  {
+    id: "dalam_kota",
+    name: "Dalam Kota (B1)",
+    color: "#1e3a8a",
+    description: "Area Dalam Kota",
+    type: "area",
+    region: "bogor",
+  },
+  {
+    id: "jasinga",
+    name: "Jasinga (B2)",
+    color: "#2563eb",
+    description: "Area Jasinga",
+    type: "area",
+    region: "bogor",
+  },
+  {
+    id: "cisarua",
+    name: "Cisarua (B3)",
+    color: "#0ea5e9",
+    description: "Area Cisarua",
+    type: "area",
+    region: "bogor",
+  },
+  {
+    id: "cigombong",
+    name: "Cigombong (B4)",
+    color: "#38bdf8",
+    description: "Area Cigombong",
+    type: "area",
+    region: "bogor",
+  },
+  {
+    id: "semua_depok",
+    name: "Semua Depok",
+    color: "#7c3aed",
+    description: "Tampilkan seluruh area Depok",
+    type: "regional",
+  },
+  {
+    id: "ciseeng",
+    name: "Ciseeng (D1)",
+    color: "#581c87",
+    description: "Area Ciseeng",
+    type: "area",
+    region: "depok",
+  },
+  {
+    id: "palsi",
+    name: "Palsi (D2)",
+    color: "#7c3aed",
+    description: "Area Palsi",
+    type: "area",
+    region: "depok",
+  },
+  {
+    id: "citereup",
+    name: "Citereup (D3)",
+    color: "#a855f7",
+    description: "Area Citereup",
+    type: "area",
+    region: "depok",
+  },
+  {
+    id: "klapanunggal",
+    name: "Klapanunggal (D4)",
+    color: "#c084fc",
+    description: "Area Klapanunggal",
+    type: "area",
+    region: "depok",
+  },
+];
+
+// Area files mapping
+export const areaFiles = {
+  dalam_kota: [
+    { file: "bogor_tengah.geojson", name: "Bogor Tengah" },
+    { file: "bogor_utara.geojson", name: "Bogor Utara" },
+    { file: "tanah_sereal.geojson", name: "Tanah Sereal" },
+  ],
+  jasinga: [
+    { file: "leuwiliang.geojson", name: "Leuwiliang" },
+    { file: "cigudeg.geojson", name: "Cigudeg" },
+    { file: "nanggung.geojson", name: "Nanggung" },
+    { file: "cibangbulang.geojson", name: "Cibangbulang" },
+    { file: "jasinga.geojson", name: "Jasinga" },
+    { file: "pamijahan.geojson", name: "Pamijahan" },
+  ],
+  cisarua: [
+    { file: "bojong_gede.geojson", name: "Bojong Gede" },
+    { file: "cisarua.geojson", name: "Cisarua" },
+    { file: "ciampea.geojson", name: "Ciampea" },
+    { file: "tanah_sereal.geojson", name: "Tanah Sereal" },
+    { file: "tenjolaya.geojson", name: "Tenjolaya" },
+    { file: "bogor_barat.geojson", name: "Bogor Barat" },
+    { file: "dramaga.geojson", name: "Dramaga" },
+    { file: "ranca_bungur.geojson", name: "Rancabungur" },
+    { file: "cipayung(depok).geojson", name: "Cipayung (Depok)" },
+  ],
+  cigombong: [
+    { file: "cigombong.geojson", name: "Cigombong" },
+    { file: "cijeruk.geojson", name: "Cijeruk" },
+    { file: "caringin.geojson", name: "Caringin" },
+    { file: "ciawi.geojson", name: "Ciawi" },
+    { file: "bogor_selatan.geojson", name: "Bogor Selatan" },
+    { file: "bogor_timur.geojson", name: "Bogor Timur" },
+    { file: "bogor_utara.geojson", name: "Bogor Utara" },
+    { file: "sukaraja.geojson", name: "Sukaraja" },
+  ],
+  ciseeng: [
+    { file: "ciseeng.geojson", name: "Ciseeng" },
+    { file: "limo.geojson", name: "Limo" },
+    { file: "pancoran_mas.geojson", name: "Pancoran Mas" },
+    { file: "parung.geojson", name: "Parung" },
+    { file: "beji.geojson", name: "Beji" },
+    { file: "tajurhalang.geojson", name: "Tajur Halang" },
+    { file: "sawangan.geojson", name: "Sawangan" },
+  ],
+  palsi: [
+    { file: "cimanggis.geojson", name: "Cimanggis" },
+    { file: "tapos.geojson", name: "Tapos" },
+    { file: "sukmajaya.geojson", name: "Sukma Jaya" },
+    { file: "cilodong.geojson", name: "Cilodong" },
+  ],
+  citereup: [
+    { file: "citeureup.geojson", name: "Citereup" },
+    { file: "cibinong.geojson", name: "Cibinong" },
+    { file: "babakan_madang.geojson", name: "Babakan Madang" },
+  ],
+  klapanunggal: [
+    { file: "klapanunggal.geojson", name: "Klapanunggal" },
+    { file: "jonggol.geojson", name: "Jonggol" },
+    { file: "cariu.geojson", name: "Cariu" },
+    { file: "cileungsi.geojson", name: "Cileungsi" },
+    { file: "gunung_putri.geojson", name: "Gunung Putri" },
+  ],
+};
+
+// Map center coordinates (Bogor area)
+export const DEFAULT_MAP_CENTER = [-6.5944, 106.7892];
+export const DEFAULT_MAP_ZOOM = 11;
