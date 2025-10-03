@@ -1,6 +1,8 @@
-import { useState, useEffect } from "react";
-import { MapContainer, TileLayer, GeoJSON } from "react-leaflet";
+import { useState, useEffect, useRef } from "react";
+import { MapContainer, TileLayer, GeoJSON, Marker, Polyline, Popup, useMap } from "react-leaflet";
+import L from "leaflet";
 import SalesmanSchedule from "./SalesmanSchedule.jsx";
+import { subAreaLocations } from "../data/subAreaLocations.js";
 import "leaflet/dist/leaflet.css";
 
 const Map = () => {
@@ -11,6 +13,10 @@ const Map = () => {
   const [selectedAreas, setSelectedAreas] = useState([]);
   const [panelVisible, setPanelVisible] = useState(true);
   const [panelMinimized, setPanelMinimized] = useState(false);
+  const [showSubAreas, setShowSubAreas] = useState(true);
+  const [selectedSubArea, setSelectedSubArea] = useState(null);
+  const [showSubAreaList, setShowSubAreaList] = useState(false);
+  const mapRef = useRef(null);
 
   // Area folders based on public/data directory structure
   const availableAreas = [
@@ -392,6 +398,173 @@ const Map = () => {
   const center = [-6.5944, 106.7892];
   const [showSchedule, setShowSchedule] = useState(false);
 
+  // Custom icons for sub areas
+  const createIcon = (type) => {
+    const iconConfig = {
+      street: {
+        html: `<div style="background: #3b82f6; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="white">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+          </svg>
+        </div>`,
+        iconSize: [24, 24],
+        iconAnchor: [12, 12]
+      },
+      market: {
+        html: `<div style="background: #10b981; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
+            <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
+          </svg>
+        </div>`,
+        iconSize: [28, 28],
+        iconAnchor: [14, 14]
+      },
+      store: {
+        html: `<div style="background: #f59e0b; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="white">
+            <path d="M20 4H4v2h16V4zm1 10v-2l-1-5H4l-1 5v2h1v6h10v-6h4v6h2v-6h1zm-9 4H6v-4h6v4z"/>
+          </svg>
+        </div>`,
+        iconSize: [26, 26],
+        iconAnchor: [13, 13]
+      }
+    };
+
+    const config = iconConfig[type] || iconConfig.street;
+    return L.divIcon({
+      html: config.html,
+      iconSize: config.iconSize,
+      iconAnchor: config.iconAnchor,
+      className: ''
+    });
+  };
+
+  // Function to show coordinate toast with copy button
+  const showCoordinateToast = (lat, lng) => {
+    const coordString = `[-${Math.abs(lat).toFixed(6)}, ${lng.toFixed(6)}]`;
+    console.log('📍 Koordinat diklik:', coordString);
+    console.log('📋 Copy untuk subAreaLocations.js:', `coords: ${coordString}`);
+
+    // Remove all existing toasts (remove by class to catch any old versions)
+    document.querySelectorAll('[id^="coord-toast"]').forEach(el => {
+      const parent = el.parentElement;
+      if (parent && document.body.contains(parent)) {
+        document.body.removeChild(parent);
+      }
+    });
+
+    // Show toast notification with copy button
+    const toast = document.createElement('div');
+    toast.innerHTML = `
+      <div id="coord-toast" style="position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 10001; background: #1f2937; color: white; padding: 16px 20px; border-radius: 12px; box-shadow: 0 8px 16px rgba(0,0,0,0.4); font-size: 13px; min-width: 350px; animation: slideUp 0.3s ease-out;">
+        <div style="font-weight: bold; margin-bottom: 10px; font-size: 14px;">📍 Koordinat Diklik (Dev Mode)</div>
+        <div style="font-family: monospace; font-size: 12px; background: #374151; padding: 8px 10px; border-radius: 6px; margin-bottom: 10px; text-align: center; letter-spacing: 0.5px;">${coordString}</div>
+        <button id="copy-coord-btn" style="width: 100%; background: #3b82f6; color: white; border: none; padding: 10px 16px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; transition: all 0.2s; box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);">
+          📋 Klik untuk Copy
+        </button>
+      </div>
+    `;
+
+    // Add animation keyframes if not exists
+    if (!document.getElementById('toast-animation-style')) {
+      const style = document.createElement('style');
+      style.id = 'toast-animation-style';
+      style.textContent = `
+        @keyframes slideUp {
+          from {
+            transform: translateX(-50%) translateY(20px);
+            opacity: 0;
+          }
+          to {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+          }
+        }
+      `;
+      document.head.appendChild(style);
+    }
+
+    document.body.appendChild(toast);
+
+    // Add copy functionality
+    const copyBtn = document.getElementById('copy-coord-btn');
+    copyBtn.addEventListener('click', () => {
+      navigator.clipboard.writeText(coordString).then(() => {
+        copyBtn.textContent = '✅ Tersalin ke Clipboard!';
+        copyBtn.style.background = '#10b981';
+        copyBtn.style.boxShadow = '0 2px 4px rgba(16, 185, 129, 0.3)';
+      });
+    });
+
+    // Hover effect
+    copyBtn.addEventListener('mouseenter', () => {
+      if (!copyBtn.textContent.includes('Tersalin')) {
+        copyBtn.style.background = '#2563eb';
+        copyBtn.style.transform = 'scale(1.02)';
+      }
+    });
+    copyBtn.addEventListener('mouseleave', () => {
+      if (!copyBtn.textContent.includes('Tersalin')) {
+        copyBtn.style.background = '#3b82f6';
+        copyBtn.style.transform = 'scale(1)';
+      }
+    });
+
+    setTimeout(() => {
+      if (document.body.contains(toast)) {
+        toast.style.transition = 'opacity 0.3s ease-out';
+        toast.style.opacity = '0';
+        setTimeout(() => {
+          if (document.body.contains(toast)) {
+            document.body.removeChild(toast);
+          }
+        }, 300);
+      }
+    }, 6000);
+  };
+
+  // Function to zoom to sub area location
+  const zoomToSubArea = (location) => {
+    if (!mapRef.current) return;
+
+    const map = mapRef.current;
+
+    if (location.type === "street" && Array.isArray(location.coords[0])) {
+      // For streets (polyline), fit bounds to show entire line
+      const bounds = L.latLngBounds(location.coords);
+      map.fitBounds(bounds, { padding: [50, 50], maxZoom: 16 });
+    } else {
+      // For markers, center and zoom to point
+      const position = Array.isArray(location.coords[0])
+        ? location.coords[0]
+        : location.coords;
+      map.setView(position, 17, { animate: true, duration: 1 });
+    }
+
+    setSelectedSubArea(location);
+  };
+
+  // Component to access map instance and handle click events
+  const MapEvents = () => {
+    const map = useMap();
+    mapRef.current = map;
+
+    useEffect(() => {
+      const handleClick = (e) => {
+        const { lat, lng } = e.latlng;
+        showCoordinateToast(lat, lng);
+      };
+
+      map.on('click', handleClick);
+
+      return () => {
+        map.off('click', handleClick);
+      };
+    }, [map]);
+
+    return null;
+  };
+
   return (
     <div className="h-screen w-screen fixed top-0 left-0 overflow-hidden">
       {/* Schedule Panel Toggle */}
@@ -672,6 +845,126 @@ const Map = () => {
                       ))}
                   </div>
                 </div>
+
+                {/* Sub Area Toggle - only show when B1 is selected */}
+                {selectedAreas.some((area) => area.id === "dalam_kota") && (
+                  <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-2">
+                        <svg
+                          className="w-4 h-4 text-blue-600"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                          />
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                          />
+                        </svg>
+                        <span className="text-sm font-medium text-blue-900">
+                          Tampilkan Sub Area B1
+                        </span>
+                      </div>
+                      <label className="relative inline-flex items-center cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={showSubAreas}
+                          onChange={(e) => setShowSubAreas(e.target.checked)}
+                          className="sr-only peer"
+                        />
+                        <div className="w-9 h-5 bg-gray-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-600"></div>
+                      </label>
+                    </div>
+                    <p className="text-xs text-blue-700 mt-2">
+                      Menampilkan {subAreaLocations.dalam_kota.length} lokasi
+                      (jalan, pasar, toko)
+                    </p>
+
+                    {/* Button to toggle list */}
+                    <button
+                      onClick={() => setShowSubAreaList(!showSubAreaList)}
+                      className="mt-3 w-full bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium py-2 px-3 rounded-lg transition-colors flex items-center justify-center space-x-1"
+                    >
+                      <svg
+                        className={`w-4 h-4 transition-transform ${showSubAreaList ? 'rotate-180' : ''}`}
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M19 9l-7 7-7-7"
+                        />
+                      </svg>
+                      <span>{showSubAreaList ? 'Sembunyikan' : 'Lihat'} Daftar Lokasi</span>
+                    </button>
+
+                    {/* Sub Area List */}
+                    {showSubAreaList && (
+                      <div className="mt-3 max-h-64 overflow-y-auto space-y-1">
+                        {subAreaLocations.dalam_kota.map((location, index) => {
+                          const iconColor =
+                            location.type === 'street' ? 'bg-blue-500' :
+                            location.type === 'market' ? 'bg-green-500' :
+                            'bg-orange-500';
+
+                          const iconText =
+                            location.type === 'street' ? 'J' :
+                            location.type === 'market' ? 'P' :
+                            'T';
+
+                          return (
+                            <div
+                              key={index}
+                              onClick={() => zoomToSubArea(location)}
+                              className={`flex items-center space-x-2 p-2 rounded cursor-pointer transition-all ${
+                                selectedSubArea?.name === location.name
+                                  ? 'bg-blue-100 border border-blue-300'
+                                  : 'bg-white hover:bg-gray-50 border border-gray-200'
+                              }`}
+                            >
+                              <div className={`${iconColor} text-white w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0`}>
+                                {iconText}
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <p className="text-xs font-medium text-gray-900 truncate">
+                                  {location.name}
+                                </p>
+                                <p className="text-xs text-gray-500 capitalize">
+                                  {location.kecamatan.replace(/_/g, ' ')}
+                                </p>
+                              </div>
+                              <svg
+                                className="w-4 h-4 text-blue-600 flex-shrink-0"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M9 5l7 7-7 7"
+                                />
+                              </svg>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
 
               {/* Selected Areas Info */}
@@ -769,6 +1062,12 @@ const Map = () => {
               data={data}
               style={geoJsonStyle(fileId)}
               onEachFeature={(feature, layer) => {
+                // Add click handler to show coordinates
+                layer.on('click', (e) => {
+                  const { lat, lng } = e.latlng;
+                  showCoordinateToast(lat, lng);
+                });
+
                 if (feature.properties) {
                   let displayName =
                     data?.displayName || fileId.replace(/_/g, " ");
@@ -882,6 +1181,84 @@ const Map = () => {
             />
           );
         })}
+
+        {/* Render Sub Areas - only show when B1 (dalam_kota) is selected */}
+        {showSubAreas &&
+          selectedAreas.some((area) => area.id === "dalam_kota") &&
+          subAreaLocations.dalam_kota.map((location, index) => {
+            // If it's a street (has multiple coords), render as Polyline
+            if (location.type === "street" && Array.isArray(location.coords[0])) {
+              return (
+                <Polyline
+                  key={`subarea-${index}`}
+                  positions={location.coords}
+                  color="#ef4444"
+                  weight={6}
+                  opacity={0.9}
+                  dashArray="10, 5"
+                  lineCap="round"
+                  lineJoin="round"
+                >
+                  <Popup>
+                    <div className="text-sm">
+                      <h4 className="font-bold text-blue-600 mb-1">
+                        {location.name}
+                      </h4>
+                      <p className="text-gray-600">
+                        Tipe: <span className="font-medium">Jalan</span>
+                      </p>
+                      <p className="text-gray-600">
+                        Kecamatan:{" "}
+                        <span className="font-medium capitalize">
+                          {location.kecamatan.replace(/_/g, " ")}
+                        </span>
+                      </p>
+                    </div>
+                  </Popup>
+                </Polyline>
+              );
+            } else {
+              // For markets and stores, render as Marker
+              const position = Array.isArray(location.coords[0])
+                ? location.coords[0]
+                : location.coords;
+
+              return (
+                <Marker
+                  key={`subarea-${index}`}
+                  position={position}
+                  icon={createIcon(location.type)}
+                >
+                  <Popup>
+                    <div className="text-sm">
+                      <h4 className="font-bold mb-1"
+                        style={{
+                          color: location.type === 'market' ? '#10b981' : '#f59e0b'
+                        }}
+                      >
+                        {location.name}
+                      </h4>
+                      <p className="text-gray-600">
+                        Tipe:{" "}
+                        <span className="font-medium capitalize">
+                          {location.type === "market" ? "Pasar" : "Toko/Ruko"}
+                        </span>
+                      </p>
+                      <p className="text-gray-600">
+                        Kecamatan:{" "}
+                        <span className="font-medium capitalize">
+                          {location.kecamatan.replace(/_/g, " ")}
+                        </span>
+                      </p>
+                    </div>
+                  </Popup>
+                </Marker>
+              );
+            }
+          })}
+
+        {/* Map Events Component to get map reference */}
+        <MapEvents />
       </MapContainer>
     </div>
   );
