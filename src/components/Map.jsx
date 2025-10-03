@@ -591,7 +591,7 @@ const Map = () => {
                           return (
                             <div
                               key={index}
-                              onClick={() => zoomToSubAreaHelper(mapRef, location, setSelectedSubArea)}
+                              onClick={() => zoomToSubAreaHelper(mapRef, location, setSelectedSubArea, selectedSubArea)}
                               className={`flex items-center space-x-2 p-2 rounded cursor-pointer transition-all ${
                                 selectedSubArea?.name === location.name
                                   ? 'bg-blue-100 border border-blue-300'
@@ -850,16 +850,18 @@ const Map = () => {
         {showSubAreas &&
           selectedAreas.some((area) => area.id === "dalam_kota") &&
           subAreaLocations.dalam_kota.map((location, index) => {
+            const isSelected = selectedSubArea?.name === location.name;
+
             // If it's a street (has multiple coords), render as Polyline
             if (location.type === "street" && Array.isArray(location.coords[0])) {
               return (
                 <Polyline
-                  key={`subarea-${index}`}
+                  key={`subarea-${index}-${isSelected ? 'selected' : 'normal'}`}
                   positions={location.coords}
-                  color="#ef4444"
-                  weight={6}
-                  opacity={0.9}
-                  dashArray="10, 5"
+                  color={isSelected ? "#fbbf24" : "#ef4444"}
+                  weight={isSelected ? 8 : 6}
+                  opacity={1}
+                  dashArray={isSelected ? null : "10, 5"}
                   lineCap="round"
                   lineJoin="round"
                 >
@@ -889,9 +891,9 @@ const Map = () => {
 
               return (
                 <Marker
-                  key={`subarea-${index}`}
+                  key={`subarea-${index}-${isSelected ? 'selected' : 'normal'}`}
                   position={position}
-                  icon={createIcon(location.type)}
+                  icon={createIcon(location.type, isSelected)}
                 >
                   <Popup>
                     <div className="text-sm">
