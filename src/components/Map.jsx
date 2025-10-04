@@ -7,7 +7,6 @@ import { createIcon, zoomToSubArea as zoomToSubAreaHelper, geoJsonStyle as geoJs
 import { showCoordinateToast } from "../utils/coordinateToast.js";
 import "leaflet/dist/leaflet.css";
 
-
 const Map = () => {
   const [allGeoJsonData, setAllGeoJsonData] = useState({});
   const [visibleLayers, setVisibleLayers] = useState({});
