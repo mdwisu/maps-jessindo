@@ -18,6 +18,7 @@ const Map = () => {
   const [showSubAreas, setShowSubAreas] = useState(true);
   const [selectedSubArea, setSelectedSubArea] = useState(null);
   const [showSubAreaList, setShowSubAreaList] = useState(false);
+  const [subAreaGeoJsonData, setSubAreaGeoJsonData] = useState({});
   const mapRef = useRef(null);
 
   // Function to load all areas on initial load
@@ -30,6 +31,63 @@ const Map = () => {
   useEffect(() => {
     loadAllAreasInitial();
   }, []);
+
+  // Load sub area GeoJSON files when showSubAreas is enabled
+  useEffect(() => {
+    const loadSubAreaGeoJsonFiles = async () => {
+      if (!showSubAreas || !selectedAreas.some((area) => area.id === "dalam_kota")) {
+        return;
+      }
+
+      const geoJsonDataMap = {};
+
+      for (const location of subAreaLocations.dalam_kota) {
+        if (location.geojsonPath) {
+          try {
+            const response = await fetch(location.geojsonPath);
+            if (response.ok) {
+              const data = await response.json();
+              // Convert GeoJSON coordinates from [lon, lat] to [lat, lon] for Leaflet
+              if (data.features && data.features.length > 0) {
+                const allLines = [];
+
+                // Loop through all features (in case QGIS exports multiple features)
+                for (const feature of data.features) {
+                  if (feature.geometry && feature.geometry.coordinates) {
+                    const geometryType = feature.geometry.type;
+
+                    if (geometryType === 'MultiLineString') {
+                      // Handle MultiLineString - array of lines
+                      const lines = feature.geometry.coordinates.map(line =>
+                        line.map(coord => [coord[1], coord[0]])
+                      );
+                      allLines.push(...lines);
+                    } else if (geometryType === 'LineString') {
+                      // Handle single LineString
+                      const coords = feature.geometry.coordinates.map(coord => [coord[1], coord[0]]);
+                      allLines.push(coords);
+                    }
+                  }
+                }
+
+                if (allLines.length > 0) {
+                  geoJsonDataMap[location.name] = allLines;
+                }
+              }
+            } else {
+              console.warn(`GeoJSON file not found: ${location.geojsonPath}`);
+            }
+          } catch (error) {
+            console.error(`Error loading GeoJSON for ${location.name}:`, error);
+          }
+        }
+      }
+
+      setSubAreaGeoJsonData(geoJsonDataMap);
+    };
+
+    loadSubAreaGeoJsonFiles();
+  }, [showSubAreas, selectedAreas]);
 
   // Function to load specific area data
   const loadAreaData = async (areaIds) => {
@@ -563,7 +621,7 @@ const Map = () => {
                             <span className="text-xs text-gray-700">Butuh Verifikasi</span>
                           </div>
                           <div className="flex items-center space-x-2">
-                            <div className="w-3 h-3 rounded-full bg-yellow-500 flex-shrink-0"></div>
+                            <div className="w-3 h-3 rounded-full bg-orange-500 flex-shrink-0"></div>
                             <span className="text-xs text-gray-700">Set Programmer</span>
                           </div>
                           <div className="flex items-center space-x-2">
@@ -618,16 +676,26 @@ const Map = () => {
                           const getStatusBadgeColor = (status) => {
                             const colors = {
                               needs_verification: 'bg-red-500',
-                              set_by_dev: 'bg-yellow-500',
+                              set_by_dev: 'bg-orange-500',
                               verified: 'bg-green-500'
                             };
                             return colors[status] || '';
                           };
 
+                          // Get resolved coords (from GeoJSON or coords array)
+                          let resolvedCoords = subAreaGeoJsonData[location.name];
+
+                          // Fallback to coords array if no GeoJSON
+                          if (!resolvedCoords && location.coords) {
+                            resolvedCoords = Array.isArray(location.coords?.[0])
+                              ? location.coords
+                              : location.coords;
+                          }
+
                           return (
                             <div
                               key={index}
-                              onClick={() => zoomToSubAreaHelper(mapRef, location, setSelectedSubArea, selectedSubArea)}
+                              onClick={() => zoomToSubAreaHelper(mapRef, location, setSelectedSubArea, selectedSubArea, resolvedCoords)}
                               className={`flex items-center space-x-2 p-2 rounded cursor-pointer transition-all ${
                                 selectedSubArea?.name === location.name
                                   ? 'bg-blue-100 border border-blue-300'
@@ -899,7 +967,7 @@ const Map = () => {
               if (!isDev || !status) return isSelected ? "#fbbf24" : "#ef4444";
               const colors = {
                 needs_verification: '#ef4444',
-                set_by_dev: '#eab308',
+                set_by_dev: '#f97316',
                 verified: '#22c55e'
               };
               return isSelected ? "#fbbf24" : (colors[status] || "#ef4444");
@@ -916,45 +984,74 @@ const Map = () => {
             };
 
             // If it's a street (has multiple coords), render as Polyline
-            if (location.type === "street" && Array.isArray(location.coords[0])) {
+            if (location.type === "street") {
+              // Use GeoJSON data if available, otherwise fall back to coords array
+              let coordsData = subAreaGeoJsonData[location.name];
+
+              // Fallback to coords array if no GeoJSON
+              if (!coordsData && location.coords) {
+                // Wrap in array if not already (for consistency with MultiLineString)
+                coordsData = Array.isArray(location.coords?.[0]?.[0])
+                  ? location.coords  // Already array of lines
+                  : [location.coords]; // Single line, wrap it
+              }
+
+              if (!coordsData) return null;
+
+              // Popup content (shared by all lines)
+              const popupContent = (
+                <div className="text-sm">
+                  <h4 className="font-bold text-blue-600 mb-1">
+                    {location.name}
+                  </h4>
+                  <p className="text-gray-600">
+                    Tipe: <span className="font-medium">Jalan</span>
+                  </p>
+                  <p className="text-gray-600">
+                    Kecamatan:{" "}
+                    <span className="font-medium capitalize">
+                      {location.kecamatan.replace(/_/g, " ")}
+                    </span>
+                  </p>
+                  {isDev && location.coordinateStatus && (
+                    <p className="text-gray-600 mt-1">
+                      Status Koordinat:{" "}
+                      <span className="font-medium" style={{
+                        color: getStatusColor(location.coordinateStatus)
+                      }}>
+                        {getStatusLabel(location.coordinateStatus)}
+                      </span>
+                    </p>
+                  )}
+                  {coordsData.length > 1 && (
+                    <p className="text-gray-600 mt-1">
+                      <span className="font-medium">
+                        {coordsData.length} cabang
+                      </span>
+                    </p>
+                  )}
+                </div>
+              );
+
+              // Render multiple Polylines (one for each line/cabang)
               return (
-                <Polyline
-                  key={`subarea-${index}-${isSelected ? 'selected' : 'normal'}`}
-                  positions={location.coords}
-                  color={getStatusColor(location.coordinateStatus)}
-                  weight={isSelected ? 8 : 6}
-                  opacity={1}
-                  dashArray={isSelected ? null : "10, 5"}
-                  lineCap="round"
-                  lineJoin="round"
-                >
-                  <Popup>
-                    <div className="text-sm">
-                      <h4 className="font-bold text-blue-600 mb-1">
-                        {location.name}
-                      </h4>
-                      <p className="text-gray-600">
-                        Tipe: <span className="font-medium">Jalan</span>
-                      </p>
-                      <p className="text-gray-600">
-                        Kecamatan:{" "}
-                        <span className="font-medium capitalize">
-                          {location.kecamatan.replace(/_/g, " ")}
-                        </span>
-                      </p>
-                      {isDev && location.coordinateStatus && (
-                        <p className="text-gray-600 mt-1">
-                          Status Koordinat:{" "}
-                          <span className="font-medium" style={{
-                            color: getStatusColor(location.coordinateStatus)
-                          }}>
-                            {getStatusLabel(location.coordinateStatus)}
-                          </span>
-                        </p>
-                      )}
-                    </div>
-                  </Popup>
-                </Polyline>
+                <>
+                  {coordsData.map((lineCoords, lineIndex) => (
+                    <Polyline
+                      key={`subarea-${index}-line-${lineIndex}-${isSelected ? 'selected' : 'normal'}`}
+                      positions={lineCoords}
+                      color={getStatusColor(location.coordinateStatus)}
+                      weight={isSelected ? 8 : 6}
+                      opacity={1}
+                      dashArray={isSelected ? null : "10, 5"}
+                      lineCap="round"
+                      lineJoin="round"
+                    >
+                      {/* Only show popup on first line to avoid duplicates */}
+                      {lineIndex === 0 && <Popup>{popupContent}</Popup>}
+                    </Polyline>
+                  ))}
+                </>
               );
             } else {
               // For markets and stores, render as Marker

@@ -4,7 +4,7 @@ import L from "leaflet";
 const getStatusBadge = (status) => {
   const statusConfig = {
     needs_verification: { color: '#ef4444', label: '!' },
-    set_by_dev: { color: '#eab308', label: '✓' },
+    set_by_dev: { color: '#f97316', label: '✓' },
     verified: { color: '#22c55e', label: '✓✓' }
   };
   return statusConfig[status] || null;
@@ -64,7 +64,7 @@ export const createIcon = (type, isSelected = false, coordinateStatus = null) =>
 };
 
 // Function to zoom to sub area location
-export const zoomToSubArea = (mapRef, location, setSelectedSubArea, currentSelected) => {
+export const zoomToSubArea = (mapRef, location, setSelectedSubArea, currentSelected, resolvedCoords = null) => {
   if (!mapRef.current) return;
 
   const map = mapRef.current;
@@ -75,15 +75,26 @@ export const zoomToSubArea = (mapRef, location, setSelectedSubArea, currentSelec
     return;
   }
 
-  if (location.type === "street" && Array.isArray(location.coords[0])) {
-    // For streets (polyline), fit bounds to show entire line
-    const bounds = L.latLngBounds(location.coords);
-    map.fitBounds(bounds, { padding: [50, 50], maxZoom: 16 });
-  } else {
+  // Use resolved coords if provided, otherwise use location.coords
+  const coords = resolvedCoords || location.coords;
+
+  if (location.type === "street" && coords) {
+    // Check if it's multiple lines (array of arrays of coordinates)
+    const isMultiLine = Array.isArray(coords[0]?.[0]?.[0]);
+
+    if (isMultiLine) {
+      // For MultiLineString, create bounds from all lines
+      const allPoints = coords.flat();
+      const bounds = L.latLngBounds(allPoints);
+      map.fitBounds(bounds, { padding: [50, 50], maxZoom: 16 });
+    } else if (Array.isArray(coords[0])) {
+      // Single LineString
+      const bounds = L.latLngBounds(coords);
+      map.fitBounds(bounds, { padding: [50, 50], maxZoom: 16 });
+    }
+  } else if (coords) {
     // For markers, center and zoom to point
-    const position = Array.isArray(location.coords[0])
-      ? location.coords[0]
-      : location.coords;
+    const position = Array.isArray(coords[0]) ? coords[0] : coords;
     map.setView(position, 17, { animate: true, duration: 1 });
   }
 
