@@ -72,9 +72,11 @@ echo [SUCCESS] Git pull completed
 echo.
 
 echo [INFO] Step 3/6: Installing dependencies...
-echo [DEBUG] Running: npm install
-npm install
-if %errorlevel% neq 0 (
+echo [DEBUG] Running: npm install --loglevel=error
+call npm install --loglevel=error
+set INSTALL_ERROR=%errorlevel%
+echo [DEBUG] npm install exit code: %INSTALL_ERROR%
+if %INSTALL_ERROR% neq 0 (
     echo [ERROR] Failed to install dependencies
     pause
     exit /b 1
@@ -84,8 +86,10 @@ echo.
 
 echo [INFO] Step 4/6: Building application...
 echo [DEBUG] Running: npm run build
-npm run build
-if %errorlevel% neq 0 (
+call npm run build
+set BUILD_ERROR=%errorlevel%
+echo [DEBUG] npm build exit code: %BUILD_ERROR%
+if %BUILD_ERROR% neq 0 (
     echo [ERROR] Build failed
     pause
     exit /b 1
@@ -95,12 +99,16 @@ echo.
 
 echo [INFO] Step 5/6: Restarting PM2 process...
 echo [DEBUG] Running: pm2 restart maps-jessindo
-pm2 restart maps-jessindo
-if %errorlevel% neq 0 (
+call pm2 restart maps-jessindo
+set PM2_ERROR=%errorlevel%
+echo [DEBUG] pm2 restart exit code: %PM2_ERROR%
+if %PM2_ERROR% neq 0 (
     echo [WARNING] Failed to restart PM2 process
     echo [INFO] Attempting to start PM2 process...
-    pm2 start ecosystem.config.cjs
-    if %errorlevel% neq 0 (
+    call pm2 start ecosystem.config.cjs
+    set PM2_START_ERROR=%errorlevel%
+    echo [DEBUG] pm2 start exit code: %PM2_START_ERROR%
+    if %PM2_START_ERROR% neq 0 (
         echo [ERROR] Failed to start PM2 process
         pause
         exit /b 1
@@ -112,7 +120,8 @@ if %errorlevel% neq 0 (
 echo.
 
 echo [INFO] Step 6/6: Checking PM2 process status...
-pm2 list
+echo [DEBUG] Running: pm2 list
+call pm2 list
 echo.
 
 echo ============================================
