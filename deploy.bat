@@ -2,7 +2,11 @@
 :: Deployment script for Maps Jessindo - Windows Server 2012
 :: Auto pull, build, and restart PM2 with error handling
 
-echo Starting deployment process...
+echo ============================================
+echo   Maps Jessindo Deployment Script
+echo ============================================
+echo Started at: %date% %time%
+echo.
 
 :: Check if we're in the right directory
 if not exist "package.json" (
@@ -17,7 +21,7 @@ if not exist "ecosystem.config.cjs" (
     exit /b 1
 )
 
-echo [INFO] Step 1: Fetching latest changes from remote...
+echo [INFO] Step 1/6: Fetching latest changes from remote...
 git fetch origin
 if %errorlevel% neq 0 (
     echo [ERROR] Git fetch failed
@@ -32,11 +36,13 @@ for /f "delims=" %%i in ('git rev-parse origin/main 2^>nul') do set REMOTE=%%i
 
 if "!LOCAL!"=="!REMOTE!" (
     echo [WARNING] No new changes to deploy. Repository is up to date.
-    pause
+    echo [INFO] Deployment skipped. Exiting...
+    timeout /t 3 /nobreak >nul
     exit /b 0
 )
 
-echo [INFO] Step 2: Pulling latest changes...
+echo [INFO] Step 2/6: Pulling latest changes...
+echo [DEBUG] Running: git pull origin main
 git pull origin main
 if %errorlevel% neq 0 (
     echo [ERROR] Git pull failed. Attempting to reset and retry...
@@ -62,52 +68,70 @@ if %errorlevel% neq 0 (
 
     echo [WARNING] Local changes were stashed. Use 'git stash pop' to restore if needed.
 )
+echo [SUCCESS] Git pull completed
+echo.
 
-echo [INFO] Step 3: Installing dependencies...
+echo [INFO] Step 3/6: Installing dependencies...
+echo [DEBUG] Running: npm install
 npm install
 if %errorlevel% neq 0 (
     echo [ERROR] Failed to install dependencies
     pause
     exit /b 1
 )
+echo [SUCCESS] Dependencies installed
+echo.
 
-echo [INFO] Step 4: Building application...
+echo [INFO] Step 4/6: Building application...
+echo [DEBUG] Running: npm run build
 npm run build
 if %errorlevel% neq 0 (
     echo [ERROR] Build failed
     pause
     exit /b 1
 )
+echo [SUCCESS] Build completed
+echo.
 
-echo [INFO] Step 5: Restarting PM2 process...
+echo [INFO] Step 5/6: Restarting PM2 process...
+echo [DEBUG] Running: pm2 restart maps-jessindo
 pm2 restart maps-jessindo
 if %errorlevel% neq 0 (
-    echo [ERROR] Failed to restart PM2 process
-    echo [WARNING] Attempting to start PM2 process...
+    echo [WARNING] Failed to restart PM2 process
+    echo [INFO] Attempting to start PM2 process...
     pm2 start ecosystem.config.cjs
     if %errorlevel% neq 0 (
         echo [ERROR] Failed to start PM2 process
         pause
         exit /b 1
     )
+    echo [SUCCESS] PM2 process started
+) else (
+    echo [SUCCESS] PM2 process restarted
 )
+echo.
 
-echo [INFO] Step 6: Checking PM2 process status...
-pm2 status maps-jessindo
-if %errorlevel% neq 0 (
-    echo [WARNING] Could not check PM2 status, but deployment may still be successful
-)
+echo [INFO] Step 6/6: Checking PM2 process status...
+pm2 list
+echo.
 
-echo [INFO] Deployment completed successfully!
+echo ============================================
+echo   DEPLOYMENT COMPLETED SUCCESSFULLY!
+echo ============================================
+echo Finished at: %date% %time%
 echo.
-echo Deployment Summary:
-echo - Repository updated to latest version
-echo - Dependencies installed
-echo - Application built successfully
-echo - PM2 process restarted
+echo Summary:
+echo  - Repository updated to latest version
+echo  - Dependencies installed
+echo  - Application built successfully
+echo  - PM2 process restarted
 echo.
-echo To view logs: pm2 logs maps-jessindo
-echo To monitor: pm2 monit
+echo Useful commands:
+echo  - View logs:    pm2 logs maps-jessindo
+echo  - Monitor:      pm2 monit
+echo  - Stop:         pm2 stop maps-jessindo
+echo  - Restart:      pm2 restart maps-jessindo
 echo.
-pause
+echo Deployment will auto-close in 5 seconds...
+timeout /t 5 /nobreak >nul
 exit /b 0
