@@ -1041,6 +1041,12 @@ const Map = () => {
               return labels[status] || '-';
             };
 
+            // Helper function to generate Google Maps URL
+            const getGoogleMapsUrl = (lat, lng, name) => {
+              // Use search query with coordinates for better accuracy
+              return `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
+            };
+
             // If it's a street (has multiple coords), render as Polyline
             if (location.type === "street") {
               // Use GeoJSON data if available, otherwise fall back to coords array
@@ -1056,62 +1062,82 @@ const Map = () => {
 
               if (!coordsData) return null;
 
-              // Popup content (shared by all lines)
-              const popupContent = (
-                <div className="text-sm">
-                  <h4 className="font-bold text-blue-600 mb-1">
-                    {location.name}
-                  </h4>
-                  <p className="text-gray-600">
-                    Tipe: <span className="font-medium">Jalan</span>
-                  </p>
-                  <p className="text-gray-600">
-                    Kecamatan:{" "}
-                    <span className="font-medium capitalize">
-                      {location.kecamatan.replace(/_/g, " ")}
-                    </span>
-                  </p>
-                  {isDev && location.coordinateStatus && (
-                    <p className="text-gray-600 mt-1">
-                      Status Koordinat:{" "}
-                      <span className="font-medium" style={{
-                        color: getStatusColor(location.coordinateStatus)
-                      }}>
-                        {getStatusLabel(location.coordinateStatus)}
-                      </span>
-                    </p>
-                  )}
-                  {coordsData.length > 1 && (
-                    <p className="text-gray-600 mt-1">
-                      <span className="font-medium">
-                        {coordsData.length} cabang
-                      </span>
-                    </p>
-                  )}
-                </div>
-              );
-
               // Render multiple Polylines (one for each line/cabang)
-              return coordsData.map((lineCoords, lineIndex) => (
-                <Polyline
-                  key={`${uniqueKey}-line-${lineIndex}-${isSelected ? 'selected' : 'normal'}`}
-                  positions={lineCoords}
-                  color={getStatusColor(location.coordinateStatus)}
-                  weight={isSelected ? 8 : 6}
-                  opacity={1}
-                  dashArray={isSelected ? null : "10, 5"}
-                  lineCap="round"
-                  lineJoin="round"
-                >
-                  {/* Only show popup on first line to avoid duplicates */}
-                  {lineIndex === 0 && <Popup>{popupContent}</Popup>}
-                </Polyline>
-              ));
+              return coordsData.map((lineCoords, lineIndex) => {
+                // Get center point for Google Maps from THIS specific line
+                const lineCenter = lineCoords[0] || lineCoords;
+                const lineGoogleMapsUrl = lineCenter ? getGoogleMapsUrl(lineCenter[0], lineCenter[1], location.name) : null;
+
+                // Popup content for THIS specific line
+                const popupContent = (
+                  <div className="text-sm">
+                    <h4 className="font-bold text-blue-600 mb-1">
+                      {location.name}
+                    </h4>
+                    <p className="text-gray-600">
+                      Tipe: <span className="font-medium">Jalan</span>
+                    </p>
+                    <p className="text-gray-600">
+                      Kecamatan:{" "}
+                      <span className="font-medium capitalize">
+                        {location.kecamatan.replace(/_/g, " ")}
+                      </span>
+                    </p>
+                    {isDev && location.coordinateStatus && (
+                      <p className="text-gray-600 mt-1">
+                        Status Koordinat:{" "}
+                        <span className="font-medium" style={{
+                          color: getStatusColor(location.coordinateStatus)
+                        }}>
+                          {getStatusLabel(location.coordinateStatus)}
+                        </span>
+                      </p>
+                    )}
+                    {lineGoogleMapsUrl && (
+                      <a
+                        href={lineGoogleMapsUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="mt-4 w-full inline-flex items-center justify-center gap-2 px-5 py-3 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-sm font-bold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                        style={{ color: 'white', textDecoration: 'none' }}
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <svg className="w-5 h-5" fill="none" stroke="white" strokeWidth="2.5" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                        <span className="tracking-wide">Lihat di Google Maps</span>
+                        <svg className="w-4 h-4" fill="none" stroke="white" strokeWidth="2.5" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                        </svg>
+                      </a>
+                    )}
+                  </div>
+                );
+
+                return (
+                  <Polyline
+                    key={`${uniqueKey}-line-${lineIndex}-${isSelected ? 'selected' : 'normal'}`}
+                    positions={lineCoords}
+                    color={getStatusColor(location.coordinateStatus)}
+                    weight={isSelected ? 8 : 6}
+                    opacity={1}
+                    dashArray={isSelected ? null : "10, 5"}
+                    lineCap="round"
+                    lineJoin="round"
+                  >
+                    <Popup>{popupContent}</Popup>
+                  </Polyline>
+                );
+              });
             } else {
               // For markets and stores, render as Marker
               const position = Array.isArray(location.coords[0])
                 ? location.coords[0]
                 : location.coords;
+
+              // Generate Google Maps URL for marker
+              const markerGoogleMapsUrl = getGoogleMapsUrl(position[0], position[1], location.name);
 
               return (
                 <Marker
@@ -1150,6 +1176,23 @@ const Map = () => {
                           </span>
                         </p>
                       )}
+                      <a
+                        href={markerGoogleMapsUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="mt-4 w-full inline-flex items-center justify-center gap-2 px-5 py-3 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-sm font-bold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                        style={{ color: 'white', textDecoration: 'none' }}
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <svg className="w-5 h-5" fill="none" stroke="white" strokeWidth="2.5" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                        <span className="tracking-wide">Lihat di Google Maps</span>
+                        <svg className="w-4 h-4" fill="none" stroke="white" strokeWidth="2.5" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                        </svg>
+                      </a>
                     </div>
                   </Popup>
                 </Marker>
