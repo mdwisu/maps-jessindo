@@ -621,7 +621,7 @@ const Map = () => {
                             <span className="text-xs text-gray-700">Butuh Verifikasi</span>
                           </div>
                           <div className="flex items-center space-x-2">
-                            <div className="w-3 h-3 rounded-full bg-orange-500 flex-shrink-0"></div>
+                            <div className="w-3 h-3 rounded-full bg-cyan-500 flex-shrink-0"></div>
                             <span className="text-xs text-gray-700">Set Programmer</span>
                           </div>
                           <div className="flex items-center space-x-2">
@@ -676,7 +676,7 @@ const Map = () => {
                           const getStatusBadgeColor = (status) => {
                             const colors = {
                               needs_verification: 'bg-red-500',
-                              set_by_dev: 'bg-orange-500',
+                              set_by_dev: 'bg-cyan-500',
                               verified: 'bg-green-500'
                             };
                             return colors[status] || '';
@@ -967,7 +967,7 @@ const Map = () => {
               if (!isDev || !status) return isSelected ? "#fbbf24" : "#ef4444";
               const colors = {
                 needs_verification: '#ef4444',
-                set_by_dev: '#f97316',
+                set_by_dev: '#06b6d4',
                 verified: '#22c55e'
               };
               return isSelected ? "#fbbf24" : (colors[status] || "#ef4444");

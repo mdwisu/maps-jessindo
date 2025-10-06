@@ -4,7 +4,7 @@ import L from "leaflet";
 const getStatusBadge = (status) => {
   const statusConfig = {
     needs_verification: { color: '#ef4444', label: '!' },
-    set_by_dev: { color: '#f97316', label: '✓' },
+    set_by_dev: { color: '#06b6d4', label: '✓' },
     verified: { color: '#22c55e', label: '✓✓' }
   };
   return statusConfig[status] || null;
