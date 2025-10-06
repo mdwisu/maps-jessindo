@@ -302,13 +302,309 @@ export const subAreaLocations = {
       coordinateStatus: "estimated",
     },
   ],
+
+  jasinga: [
+    // LEUWILIANG - 3 locations
+    {
+      name: "PASAR LEUWILIANG",
+      type: "market",
+      kecamatan: "leuwiliang",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+    {
+      name: "PASAR KAMBING LEUWILIANG",
+      type: "market",
+      kecamatan: "leuwiliang",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+    {
+      name: "JL. LINGKAR PASAR",
+      type: "street",
+      kecamatan: "leuwiliang",
+      coords: [],
+      coordinateStatus: "needs_coordinates",
+    },
+    {
+      name: "JL RAYA LEUWILIANG",
+      type: "street",
+      kecamatan: "leuwiliang",
+      coords: [],
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // CIGUDEG - 2 locations
+    {
+      name: "PASAR CIGUDEG",
+      type: "market",
+      kecamatan: "cigudeg",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+    {
+      name: "JL RAYA CIGUDEG",
+      type: "street",
+      kecamatan: "cigudeg",
+      coords: [],
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // CIBUNGBULANG - 1 location
+    {
+      name: "JL RAYA CIBUNGBULANG",
+      type: "street",
+      kecamatan: "cibungbulang",
+      coords: [],
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // NANGGUNG - 3 locations
+    {
+      name: "PASAR NANGGUNG",
+      type: "market",
+      kecamatan: "nanggung",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+    {
+      name: "CIBEBER",
+      type: "store",
+      kecamatan: "nanggung",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+    {
+      name: "SADENG",
+      type: "store",
+      kecamatan: "nanggung",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // JASINGA - 2 locations
+    {
+      name: "PASAR JASINGA",
+      type: "market",
+      kecamatan: "jasinga",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+    {
+      name: "JL RAYA JASINGA",
+      type: "street",
+      kecamatan: "jasinga",
+      coords: [],
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // PAMIJAHAN - 2 locations
+    {
+      name: "PASAR PARABAKTI",
+      type: "market",
+      kecamatan: "pamijahan",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+    {
+      name: "JL. KH ABDUL HAMID",
+      type: "street",
+      kecamatan: "pamijahan",
+      coords: [],
+      coordinateStatus: "needs_coordinates",
+    },
+  ],
+
+  cisarua: [
+    // BOJONG GEDE - 4 locations
+    {
+      name: "PASAR BOJONG GEDE",
+      type: "market",
+      kecamatan: "bojong_gede",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+    {
+      name: "JL RAYA BOJONG GEDE",
+      type: "street",
+      kecamatan: "bojong_gede",
+      coords: [],
+      coordinateStatus: "needs_coordinates",
+    },
+    {
+      name: "CILEBUT",
+      type: "store",
+      kecamatan: "bojong_gede",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+    {
+      name: "JL RAYA BAMBU KUNING",
+      type: "street",
+      kecamatan: "bojong_gede",
+      coords: [],
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // CISARUA - 4 locations
+    {
+      name: "KAYUMANIS",
+      type: "store",
+      kecamatan: "cisarua",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+    {
+      name: "PASAR CISARUA",
+      type: "market",
+      kecamatan: "cisarua",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+    {
+      name: "RUKO PAFESTA PSR CISARUA",
+      type: "store",
+      kecamatan: "cisarua",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+    {
+      name: "PASAR CIBEUREUM CISARUA",
+      type: "market",
+      kecamatan: "cisarua",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // CIAMPEA - 6 locations
+    {
+      name: "PASAR CIAMPEA BARU",
+      type: "market",
+      kecamatan: "ciampea",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+    {
+      name: "PASAR CIAMPEA LAMA",
+      type: "market",
+      kecamatan: "ciampea",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+    {
+      name: "JL RAYA CIAMPEA",
+      type: "street",
+      kecamatan: "ciampea",
+      coords: [],
+      coordinateStatus: "needs_coordinates",
+    },
+    {
+      name: "JL RY BANTAR KAMBING",
+      type: "street",
+      kecamatan: "ciampea",
+      coords: [],
+      coordinateStatus: "needs_coordinates",
+    },
+    {
+      name: "JL RAYA CIBANTENG",
+      type: "street",
+      kecamatan: "ciampea",
+      coords: [],
+      coordinateStatus: "needs_coordinates",
+    },
+    {
+      name: "JL.ABDUL FATAH",
+      type: "street",
+      kecamatan: "ciampea",
+      coords: [],
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // TENJOLAYA - 1 location
+    {
+      name: "PASAR JUMAT TENJOLAYA",
+      type: "market",
+      kecamatan: "tenjolaya",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // DRAMAGA - 1 location
+    {
+      name: "PASAR DRAMAGA",
+      type: "market",
+      kecamatan: "dramaga",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // BOGOR BARAT - 3 locations
+    {
+      name: "JL.RY GUNUNG BATU",
+      type: "street",
+      kecamatan: "bogor_barat",
+      coords: [],
+      coordinateStatus: "needs_coordinates",
+    },
+    {
+      name: "JL. RY CIFOR SBJ BOGOR",
+      type: "street",
+      kecamatan: "bogor_barat",
+      coords: [],
+      coordinateStatus: "needs_coordinates",
+    },
+    {
+      name: "JL. RAYA SINDANG BARANG",
+      type: "street",
+      kecamatan: "bogor_barat",
+      coords: [],
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // RANCABUNGUR - 2 locations
+    {
+      name: "JL RAYA PABUARAN CITAYAM",
+      type: "street",
+      kecamatan: "rancabungur",
+      coords: [],
+      coordinateStatus: "needs_coordinates",
+    },
+    {
+      name: "JLN.CAGAR ALAM",
+      type: "street",
+      kecamatan: "rancabungur",
+      coords: [],
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // CIPAYUNG (DEPOK) - 1 location
+    {
+      name: "VITARA",
+      type: "store",
+      kecamatan: "cipayung",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+  ],
 };
 
 // Helper function to get sub areas by kecamatan
-export const getSubAreasByKecamatan = (kecamatan) => {
-  return subAreaLocations.dalam_kota.filter(
-    (location) => location.kecamatan === kecamatan
-  );
+export const getSubAreasByKecamatan = (kecamatan, areaId = null) => {
+  if (areaId && subAreaLocations[areaId]) {
+    return subAreaLocations[areaId].filter(
+      (location) => location.kecamatan === kecamatan
+    );
+  }
+
+  // Search across all areas if no areaId provided
+  const allLocations = [];
+  for (const area in subAreaLocations) {
+    const filtered = subAreaLocations[area].filter(
+      (location) => location.kecamatan === kecamatan
+    );
+    allLocations.push(...filtered);
+  }
+  return allLocations;
 };
 
 // Helper function to get all sub areas for an area

@@ -15,11 +15,39 @@ const Map = () => {
   const [selectedAreas, setSelectedAreas] = useState([]);
   const [panelVisible, setPanelVisible] = useState(true);
   const [panelMinimized, setPanelMinimized] = useState(false);
-  const [showSubAreas, setShowSubAreas] = useState(true);
   const [selectedSubArea, setSelectedSubArea] = useState(null);
-  const [showSubAreaList, setShowSubAreaList] = useState(false);
   const [subAreaGeoJsonData, setSubAreaGeoJsonData] = useState({});
   const mapRef = useRef(null);
+
+  // Dynamic state for showing sub areas per area
+  const [showSubAreasMap, setShowSubAreasMap] = useState({
+    dalam_kota: true,
+    jasinga: true,
+    cisarua: true,
+    cigombong: true,
+    ciseeng: true,
+    palsi: true,
+    citereup: true,
+    klapanunggal: true,
+  });
+
+  // Dynamic state for showing sub area lists per area
+  const [showSubAreaListMap, setShowSubAreaListMap] = useState({});
+
+  // Helper functions to toggle sub areas
+  const toggleSubArea = (areaId) => {
+    setShowSubAreasMap(prev => ({
+      ...prev,
+      [areaId]: !prev[areaId]
+    }));
+  };
+
+  const toggleSubAreaList = (areaId) => {
+    setShowSubAreaListMap(prev => ({
+      ...prev,
+      [areaId]: !prev[areaId]
+    }));
+  };
 
   // Function to load all areas on initial load
   const loadAllAreasInitial = async () => {
@@ -32,53 +60,58 @@ const Map = () => {
     loadAllAreasInitial();
   }, []);
 
-  // Load sub area GeoJSON files when showSubAreas is enabled
+  // Load sub area GeoJSON files dynamically for all areas
   useEffect(() => {
     const loadSubAreaGeoJsonFiles = async () => {
-      if (!showSubAreas || !selectedAreas.some((area) => area.id === "dalam_kota")) {
-        return;
-      }
-
       const geoJsonDataMap = {};
 
-      for (const location of subAreaLocations.dalam_kota) {
-        if (location.geojsonPath) {
-          try {
-            const response = await fetch(location.geojsonPath);
-            if (response.ok) {
-              const data = await response.json();
-              // Convert GeoJSON coordinates from [lon, lat] to [lat, lon] for Leaflet
-              if (data.features && data.features.length > 0) {
-                const allLines = [];
+      // Loop through all available area keys in subAreaLocations
+      for (const areaKey in subAreaLocations) {
+        // Check if this area is selected AND sub areas are enabled for this area
+        const isAreaSelected = selectedAreas.some((area) => area.id === areaKey);
+        const isSubAreasEnabled = showSubAreasMap[areaKey];
 
-                // Loop through all features (in case QGIS exports multiple features)
-                for (const feature of data.features) {
-                  if (feature.geometry && feature.geometry.coordinates) {
-                    const geometryType = feature.geometry.type;
+        if (isAreaSelected && isSubAreasEnabled && subAreaLocations[areaKey]) {
+          for (const location of subAreaLocations[areaKey]) {
+            if (location.geojsonPath) {
+              try {
+                const response = await fetch(location.geojsonPath);
+                if (response.ok) {
+                  const data = await response.json();
+                  // Convert GeoJSON coordinates from [lon, lat] to [lat, lon] for Leaflet
+                  if (data.features && data.features.length > 0) {
+                    const allLines = [];
 
-                    if (geometryType === 'MultiLineString') {
-                      // Handle MultiLineString - array of lines
-                      const lines = feature.geometry.coordinates.map(line =>
-                        line.map(coord => [coord[1], coord[0]])
-                      );
-                      allLines.push(...lines);
-                    } else if (geometryType === 'LineString') {
-                      // Handle single LineString
-                      const coords = feature.geometry.coordinates.map(coord => [coord[1], coord[0]]);
-                      allLines.push(coords);
+                    // Loop through all features (in case QGIS exports multiple features)
+                    for (const feature of data.features) {
+                      if (feature.geometry && feature.geometry.coordinates) {
+                        const geometryType = feature.geometry.type;
+
+                        if (geometryType === 'MultiLineString') {
+                          // Handle MultiLineString - array of lines
+                          const lines = feature.geometry.coordinates.map(line =>
+                            line.map(coord => [coord[1], coord[0]])
+                          );
+                          allLines.push(...lines);
+                        } else if (geometryType === 'LineString') {
+                          // Handle single LineString
+                          const coords = feature.geometry.coordinates.map(coord => [coord[1], coord[0]]);
+                          allLines.push(coords);
+                        }
+                      }
+                    }
+
+                    if (allLines.length > 0) {
+                      geoJsonDataMap[location.name] = allLines;
                     }
                   }
+                } else {
+                  console.warn(`GeoJSON file not found: ${location.geojsonPath}`);
                 }
-
-                if (allLines.length > 0) {
-                  geoJsonDataMap[location.name] = allLines;
-                }
+              } catch (error) {
+                console.error(`Error loading GeoJSON for ${location.name}:`, error);
               }
-            } else {
-              console.warn(`GeoJSON file not found: ${location.geojsonPath}`);
             }
-          } catch (error) {
-            console.error(`Error loading GeoJSON for ${location.name}:`, error);
           }
         }
       }
@@ -87,7 +120,7 @@ const Map = () => {
     };
 
     loadSubAreaGeoJsonFiles();
-  }, [showSubAreas, selectedAreas]);
+  }, [showSubAreasMap, selectedAreas]);
 
   // Function to load specific area data
   const loadAreaData = async (areaIds) => {
@@ -568,48 +601,59 @@ const Map = () => {
                   </div>
                 </div>
 
-                {/* Sub Area Toggle - only show when B1 is selected */}
-                {selectedAreas.some((area) => area.id === "dalam_kota") && (
-                  <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <svg
-                          className="w-4 h-4 text-blue-600"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                {/* Sub Area Toggles - Dynamic rendering for all areas */}
+                {selectedAreas.map((area) => {
+                  // Check if this area has sub locations
+                  if (!subAreaLocations[area.id] || subAreaLocations[area.id].length === 0) {
+                    return null;
+                  }
+
+                  const areaName = area.name;
+                  const subLocations = subAreaLocations[area.id];
+                  const isSubAreaEnabled = showSubAreasMap[area.id];
+                  const isListOpen = showSubAreaListMap[area.id];
+
+                  return (
+                    <div key={area.id} className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-2">
+                          <svg
+                            className="w-4 h-4 text-blue-600"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                            />
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                            />
+                          </svg>
+                          <span className="text-sm font-medium text-blue-900">
+                            Tampilkan Sub Area {areaName}
+                          </span>
+                        </div>
+                        <label className="relative inline-flex items-center cursor-pointer">
+                          <input
+                            type="checkbox"
+                            checked={isSubAreaEnabled}
+                            onChange={() => toggleSubArea(area.id)}
+                            className="sr-only peer"
                           />
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                          />
-                        </svg>
-                        <span className="text-sm font-medium text-blue-900">
-                          Tampilkan Sub Area B1
-                        </span>
+                          <div className="w-9 h-5 bg-gray-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-600"></div>
+                        </label>
                       </div>
-                      <label className="relative inline-flex items-center cursor-pointer">
-                        <input
-                          type="checkbox"
-                          checked={showSubAreas}
-                          onChange={(e) => setShowSubAreas(e.target.checked)}
-                          className="sr-only peer"
-                        />
-                        <div className="w-9 h-5 bg-gray-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-600"></div>
-                      </label>
-                    </div>
-                    <p className="text-xs text-blue-700 mt-2">
-                      Menampilkan {subAreaLocations.dalam_kota.length} lokasi
-                      (jalan, pasar, toko)
-                    </p>
+                      <p className="text-xs text-blue-700 mt-2">
+                        Menampilkan {subLocations.length} lokasi
+                        (jalan, pasar, toko)
+                      </p>
 
                     {/* Status Legend - only show in development mode */}
                     {import.meta.env.VITE_APP_MODE === 'development' && (
@@ -637,107 +681,108 @@ const Map = () => {
                       </div>
                     )}
 
-                    {/* Button to toggle list */}
-                    <button
-                      onClick={() => setShowSubAreaList(!showSubAreaList)}
-                      className="mt-3 w-full bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium py-2 px-3 rounded-lg transition-colors flex items-center justify-center space-x-1"
-                    >
-                      <svg
-                        className={`w-4 h-4 transition-transform ${showSubAreaList ? 'rotate-180' : ''}`}
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
+                      {/* Button to toggle list */}
+                      <button
+                        onClick={() => toggleSubAreaList(area.id)}
+                        className="mt-3 w-full bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium py-2 px-3 rounded-lg transition-colors flex items-center justify-center space-x-1"
                       >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M19 9l-7 7-7-7"
-                        />
-                      </svg>
-                      <span>{showSubAreaList ? 'Sembunyikan' : 'Lihat'} Daftar Lokasi</span>
-                    </button>
+                        <svg
+                          className={`w-4 h-4 transition-transform ${isListOpen ? 'rotate-180' : ''}`}
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M19 9l-7 7-7-7"
+                          />
+                        </svg>
+                        <span>{isListOpen ? 'Sembunyikan' : 'Lihat'} Daftar Lokasi</span>
+                      </button>
 
-                    {/* Sub Area List */}
-                    {showSubAreaList && (
-                      <div className="mt-3 max-h-64 overflow-y-auto space-y-1">
-                        {subAreaLocations.dalam_kota.map((location, index) => {
-                          const iconColor =
-                            location.type === 'street' ? 'bg-blue-500' :
-                            location.type === 'market' ? 'bg-green-500' :
-                            'bg-orange-500';
+                      {/* Sub Area List */}
+                      {isListOpen && (
+                        <div className="mt-3 max-h-64 overflow-y-auto space-y-1">
+                          {subLocations.map((location, index) => {
+                            const iconColor =
+                              location.type === 'street' ? 'bg-blue-500' :
+                              location.type === 'market' ? 'bg-green-500' :
+                              'bg-orange-500';
 
-                          const iconText =
-                            location.type === 'street' ? 'J' :
-                            location.type === 'market' ? 'P' :
-                            'T';
+                            const iconText =
+                              location.type === 'street' ? 'J' :
+                              location.type === 'market' ? 'P' :
+                              'T';
 
-                          // Get status badge color for list
-                          const getStatusBadgeColor = (status) => {
-                            const colors = {
-                              needs_coordinates: 'bg-red-500',
-                              estimated: 'bg-cyan-500',
-                              verified: 'bg-green-500'
+                            // Get status badge color for list
+                            const getStatusBadgeColor = (status) => {
+                              const colors = {
+                                needs_coordinates: 'bg-red-500',
+                                estimated: 'bg-cyan-500',
+                                verified: 'bg-green-500'
+                              };
+                              return colors[status] || '';
                             };
-                            return colors[status] || '';
-                          };
 
-                          // Get resolved coords (from GeoJSON or coords array)
-                          let resolvedCoords = subAreaGeoJsonData[location.name];
+                            // Get resolved coords (from GeoJSON or coords array)
+                            let resolvedCoords = subAreaGeoJsonData[location.name];
 
-                          // Fallback to coords array if no GeoJSON
-                          if (!resolvedCoords && location.coords) {
-                            resolvedCoords = Array.isArray(location.coords?.[0])
-                              ? location.coords
-                              : location.coords;
-                          }
+                            // Fallback to coords array if no GeoJSON
+                            if (!resolvedCoords && location.coords) {
+                              resolvedCoords = Array.isArray(location.coords?.[0])
+                                ? location.coords
+                                : location.coords;
+                            }
 
-                          return (
-                            <div
-                              key={index}
-                              onClick={() => zoomToSubAreaHelper(mapRef, location, setSelectedSubArea, selectedSubArea, resolvedCoords)}
-                              className={`flex items-center space-x-2 p-2 rounded cursor-pointer transition-all ${
-                                selectedSubArea?.name === location.name
-                                  ? 'bg-blue-100 border border-blue-300'
-                                  : 'bg-white hover:bg-gray-50 border border-gray-200'
-                              }`}
-                            >
-                              <div className="relative">
-                                <div className={`${iconColor} text-white w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0`}>
-                                  {iconText}
-                                </div>
-                                {import.meta.env.VITE_APP_MODE === 'development' && location.coordinateStatus && (
-                                  <div className={`absolute -top-1 -right-1 w-3 h-3 rounded-full border border-white ${getStatusBadgeColor(location.coordinateStatus)}`}></div>
-                                )}
-                              </div>
-                              <div className="flex-1 min-w-0">
-                                <p className="text-xs font-medium text-gray-900 truncate">
-                                  {location.name}
-                                </p>
-                                <p className="text-xs text-gray-500 capitalize">
-                                  {location.kecamatan.replace(/_/g, ' ')}
-                                </p>
-                              </div>
-                              <svg
-                                className="w-4 h-4 text-blue-600 flex-shrink-0"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
+                            return (
+                              <div
+                                key={index}
+                                onClick={() => zoomToSubAreaHelper(mapRef, location, setSelectedSubArea, selectedSubArea, resolvedCoords)}
+                                className={`flex items-center space-x-2 p-2 rounded cursor-pointer transition-all ${
+                                  selectedSubArea?.name === location.name
+                                    ? 'bg-blue-100 border border-blue-300'
+                                    : 'bg-white hover:bg-gray-50 border border-gray-200'
+                                }`}
                               >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth={2}
-                                  d="M9 5l7 7-7 7"
-                                />
-                              </svg>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    )}
-                  </div>
-                )}
+                                <div className="relative">
+                                  <div className={`${iconColor} text-white w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0`}>
+                                    {iconText}
+                                  </div>
+                                  {import.meta.env.VITE_APP_MODE === 'development' && location.coordinateStatus && (
+                                    <div className={`absolute -top-1 -right-1 w-3 h-3 rounded-full border border-white ${getStatusBadgeColor(location.coordinateStatus)}`}></div>
+                                  )}
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                  <p className="text-xs font-medium text-gray-900 truncate">
+                                    {location.name}
+                                  </p>
+                                  <p className="text-xs text-gray-500 capitalize">
+                                    {location.kecamatan.replace(/_/g, ' ')}
+                                  </p>
+                                </div>
+                                <svg
+                                  className="w-4 h-4 text-blue-600 flex-shrink-0"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M9 5l7 7-7 7"
+                                  />
+                                </svg>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
 
               {/* Selected Areas Info */}
@@ -955,12 +1000,25 @@ const Map = () => {
           );
         })}
 
-        {/* Render Sub Areas - only show when B1 (dalam_kota) is selected */}
-        {showSubAreas &&
-          selectedAreas.some((area) => area.id === "dalam_kota") &&
-          subAreaLocations.dalam_kota.map((location, index) => {
+        {/* Render Sub Areas - dynamic for all areas */}
+        {selectedAreas.flatMap((area) => {
+          // Check if sub areas should be shown for this area
+          if (!showSubAreasMap[area.id] || !subAreaLocations[area.id]) {
+            return [];
+          }
+
+          return subAreaLocations[area.id].map((location, index) => {
+            // Skip locations without coordinates AND without geojsonPath
+            const hasCoords = location.coords && !(Array.isArray(location.coords) && location.coords.length === 0);
+            const hasGeoJson = location.geojsonPath && subAreaGeoJsonData[location.name];
+
+            if (!hasCoords && !hasGeoJson) {
+              return null;
+            }
+
             const isSelected = selectedSubArea?.name === location.name;
             const isDev = import.meta.env.VITE_APP_MODE === 'development';
+            const uniqueKey = `${area.id}-${location.name}-${index}`;
 
             // Get status color for polyline
             const getStatusColor = (status) => {
@@ -1034,25 +1092,21 @@ const Map = () => {
               );
 
               // Render multiple Polylines (one for each line/cabang)
-              return (
-                <>
-                  {coordsData.map((lineCoords, lineIndex) => (
-                    <Polyline
-                      key={`subarea-${index}-line-${lineIndex}-${isSelected ? 'selected' : 'normal'}`}
-                      positions={lineCoords}
-                      color={getStatusColor(location.coordinateStatus)}
-                      weight={isSelected ? 8 : 6}
-                      opacity={1}
-                      dashArray={isSelected ? null : "10, 5"}
-                      lineCap="round"
-                      lineJoin="round"
-                    >
-                      {/* Only show popup on first line to avoid duplicates */}
-                      {lineIndex === 0 && <Popup>{popupContent}</Popup>}
-                    </Polyline>
-                  ))}
-                </>
-              );
+              return coordsData.map((lineCoords, lineIndex) => (
+                <Polyline
+                  key={`${uniqueKey}-line-${lineIndex}-${isSelected ? 'selected' : 'normal'}`}
+                  positions={lineCoords}
+                  color={getStatusColor(location.coordinateStatus)}
+                  weight={isSelected ? 8 : 6}
+                  opacity={1}
+                  dashArray={isSelected ? null : "10, 5"}
+                  lineCap="round"
+                  lineJoin="round"
+                >
+                  {/* Only show popup on first line to avoid duplicates */}
+                  {lineIndex === 0 && <Popup>{popupContent}</Popup>}
+                </Polyline>
+              ));
             } else {
               // For markets and stores, render as Marker
               const position = Array.isArray(location.coords[0])
@@ -1061,7 +1115,7 @@ const Map = () => {
 
               return (
                 <Marker
-                  key={`subarea-${index}-${isSelected ? 'selected' : 'normal'}`}
+                  key={`${uniqueKey}-${isSelected ? 'selected' : 'normal'}`}
                   position={position}
                   icon={createIcon(location.type, isSelected, location.coordinateStatus)}
                 >
@@ -1101,7 +1155,8 @@ const Map = () => {
                 </Marker>
               );
             }
-          })}
+          }).filter(Boolean); // end of location.map, filter out nulls
+        }).filter(Boolean)} {/* end of flatMap, filter out empty arrays */}
 
         {/* Map Events Component to get map reference */}
         <MapEvents />
