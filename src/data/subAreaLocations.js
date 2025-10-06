@@ -2,6 +2,11 @@
 // Coordinates are estimated based on kecamatan centroid
 // You can adjust coordinates manually for more precise locations
 
+// Coordinate Status:
+// - "needs_verification": Koordinat belum sesuai/butuh verifikasi
+// - "set_by_dev": Koordinat sudah di-set oleh programmer
+// - "verified": Koordinat sudah di-cek dan diverifikasi oleh supervisor
+
 export const subAreaLocations = {
   dalam_kota: [
     // BOGOR TENGAH - 11 locations
@@ -27,16 +32,21 @@ export const subAreaLocations = {
         [-6.608888, 106.804269],
         [-6.609501, 106.804767],
       ],
+      coordinateStatus: "set_by_dev",
     },
     {
       name: "JL KLENTENG",
       type: "street",
       kecamatan: "bogor_tengah",
       coords: [
-        [-6.5965, 106.797],
-        [-6.5963, 106.7973],
-        [-6.596, 106.7975],
+        [-6.603378, 106.800015],
+        [-6.603346, 106.800203],
+        [-6.603303, 106.800433],
+        [-6.603229, 106.800852],
+        [-6.603191, 106.801056],
+        [-6.603165, 106.801222],
       ],
+      coordinateStatus: "set_by_dev",
     },
     {
       name: "PASAR BOGOR BAWAH",
@@ -44,15 +54,16 @@ export const subAreaLocations = {
       kecamatan: "bogor_tengah",
       // For markets/stores: single coordinate point
       coords: [-6.595, 106.7975],
+      coordinateStatus: "needs_verification",
     },
     {
       name: "JL. OTISTA",
       type: "street",
       kecamatan: "bogor_tengah",
       coords: [
-        [-6.600892346283031, 106.80512711467146],
-        [-6.601737, 106.805186],
-        [-6.601337, 106.8048],
+        [-6.601524, 106.804628],
+        [-6.601524, 106.804628],
+        [-6.601524, 106.804628],
         [-6.601593, 106.804392],
         [-6.601673, 106.804065],
         [-6.601774, 106.803711],
@@ -61,14 +72,16 @@ export const subAreaLocations = {
         [-6.602462, 106.801207],
         [-6.602622, 106.800016],
         [-6.602637, 106.799822],
-        [-6.603080, 106.798894]
+        [-6.60308, 106.798894],
       ],
+      coordinateStatus: "set_by_dev",
     },
     {
       name: "PASAR BOGOR ATAS",
       type: "market",
       kecamatan: "bogor_tengah",
       coords: [-6.5945, 106.7968],
+      coordinateStatus: "needs_verification",
     },
     {
       name: "JL SUKAMULYA",
@@ -79,6 +92,7 @@ export const subAreaLocations = {
         [-6.5968, 106.7968],
         [-6.5965, 106.797],
       ],
+      coordinateStatus: "needs_verification",
     },
     {
       name: "JL. PADASUKA",
@@ -89,12 +103,14 @@ export const subAreaLocations = {
         [-6.5956, 106.7958],
         [-6.5953, 106.796],
       ],
+      coordinateStatus: "needs_verification",
     },
     {
       name: "PASAR CUNPOK",
       type: "market",
       kecamatan: "bogor_tengah",
       coords: [-6.5963, 106.798],
+      coordinateStatus: "needs_verification",
     },
     {
       name: "JL. PEDATI",
@@ -105,6 +121,7 @@ export const subAreaLocations = {
         [-6.5973, 106.7973],
         [-6.597, 106.7975],
       ],
+      coordinateStatus: "needs_verification",
     },
     {
       name: "JL.LAWANG SAKETENG",
@@ -115,6 +132,7 @@ export const subAreaLocations = {
         [-6.5948, 106.7953],
         [-6.5945, 106.7955],
       ],
+      coordinateStatus: "needs_verification",
     },
     {
       name: "JL JUANDA",
@@ -125,12 +143,14 @@ export const subAreaLocations = {
         [-6.5963, 106.7978],
         [-6.596, 106.798],
       ],
+      coordinateStatus: "needs_verification",
     },
     {
       name: "RUKO MERDEKA",
       type: "store",
       kecamatan: "bogor_tengah",
       coords: [-6.5968, 106.7963],
+      coordinateStatus: "needs_verification",
     },
     {
       name: "JL PERINTIS KEMERDEKAAN",
@@ -141,6 +161,7 @@ export const subAreaLocations = {
         [-6.5978, 106.7968],
         [-6.5975, 106.797],
       ],
+      coordinateStatus: "needs_verification",
     },
     {
       name: "JL.MA SALMUN BAWAH",
@@ -151,12 +172,14 @@ export const subAreaLocations = {
         [-6.5953, 106.7983],
         [-6.595, 106.7985],
       ],
+      coordinateStatus: "needs_verification",
     },
     {
       name: "RUKO SALMUN ATAS",
       type: "store",
       kecamatan: "bogor_tengah",
       coords: [-6.5953, 106.7978],
+      coordinateStatus: "needs_verification",
     },
     {
       name: "JL DEWI SARTIKA",
@@ -167,12 +190,14 @@ export const subAreaLocations = {
         [-6.5958, 106.7958],
         [-6.5955, 106.796],
       ],
+      coordinateStatus: "needs_verification",
     },
     {
       name: "PASAR ANYAR BLOK CD",
       type: "market",
       kecamatan: "bogor_tengah",
       coords: [-6.597, 106.796],
+      coordinateStatus: "needs_verification",
     },
     {
       name: "JL SAWOJAJAR",
@@ -183,6 +208,7 @@ export const subAreaLocations = {
         [-6.5946, 106.7973],
         [-6.5943, 106.7975],
       ],
+      coordinateStatus: "needs_verification",
     },
 
     // BOGOR UTARA - 1 location
@@ -191,6 +217,7 @@ export const subAreaLocations = {
       type: "market",
       kecamatan: "bogor_utara",
       coords: [-6.5692, 106.8149],
+      coordinateStatus: "needs_verification",
     },
 
     // TANAH SEREAL - 4 locations
@@ -199,12 +226,14 @@ export const subAreaLocations = {
       type: "store",
       kecamatan: "tanah_sereal",
       coords: [-6.548, 106.7863],
+      coordinateStatus: "needs_verification",
     },
     {
       name: "PONDOK RUMPUT",
       type: "store",
       kecamatan: "tanah_sereal",
       coords: [-6.5475, 106.7868],
+      coordinateStatus: "needs_verification",
     },
     {
       name: "JL. RAYA SEMPLAK",
@@ -215,12 +244,14 @@ export const subAreaLocations = {
         [-6.5483, 106.7858],
         [-6.548, 106.786],
       ],
+      coordinateStatus: "needs_verification",
     },
     {
       name: "CIMANGGU",
       type: "store",
       kecamatan: "tanah_sereal",
       coords: [-6.5485, 106.787],
+      coordinateStatus: "needs_verification",
     },
   ],
 };

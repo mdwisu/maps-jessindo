@@ -1,5 +1,10 @@
 // Utility function to show coordinate toast with copy button (Dev Mode)
 export const showCoordinateToast = (lat, lng) => {
+  // Only show in development mode
+  if (import.meta.env.VITE_APP_MODE !== 'development') {
+    return;
+  }
+
   const coordString = `[-${Math.abs(lat).toFixed(6)}, ${lng.toFixed(6)}]`;
   console.log('📍 Koordinat diklik:', coordString);
   console.log('📋 Copy untuk subAreaLocations.js:', `coords: ${coordString}`);

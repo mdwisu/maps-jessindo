@@ -232,7 +232,7 @@ const Map = () => {
   return (
     <div className="h-screen w-screen fixed top-0 left-0 overflow-hidden">
       {/* Schedule Panel Toggle */}
-      <div className="absolute top-4 right-4 z-[1002]">
+      {/* <div className="absolute top-4 right-4 z-[1002]">
         <button
           onClick={() => setShowSchedule(!showSchedule)}
           className="bg-white hover:bg-gray-50 p-3 rounded-lg shadow-lg border transition-all duration-200 group"
@@ -252,16 +252,16 @@ const Map = () => {
             />
           </svg>
         </button>
-      </div>
+      </div> */}
 
       {/* Schedule Panel */}
-      {showSchedule && (
+      {/* {showSchedule && (
         <div className="absolute top-4 right-20 z-[1001] w-80">
           <SalesmanSchedule />
         </div>
-      )}
+      )} */}
       {/* Toggle Panel Button */}
-      <div className="absolute top-4 left-4 z-[1001]">
+      {/* <div className="absolute top-4 left-4 z-[1001]">
         <button
           onClick={() => setPanelVisible(!panelVisible)}
           className="bg-white hover:bg-gray-50 p-3 rounded-lg shadow-lg border transition-all duration-200 group"
@@ -287,7 +287,7 @@ const Map = () => {
             ></div>
           </div>
         </button>
-      </div>
+      </div> */}
 
       {/* Modern Control Panel */}
       {panelVisible && (
@@ -553,6 +553,32 @@ const Map = () => {
                       (jalan, pasar, toko)
                     </p>
 
+                    {/* Status Legend - only show in development mode */}
+                    {import.meta.env.VITE_APP_MODE === 'development' && (
+                      <div className="mt-3 pt-3 border-t border-blue-200">
+                        <p className="text-xs font-semibold text-blue-900 mb-2">Status Koordinat:</p>
+                        <div className="space-y-1.5">
+                          <div className="flex items-center space-x-2">
+                            <div className="w-3 h-3 rounded-full bg-red-500 flex-shrink-0"></div>
+                            <span className="text-xs text-gray-700">Butuh Verifikasi</span>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <div className="w-3 h-3 rounded-full bg-yellow-500 flex-shrink-0"></div>
+                            <span className="text-xs text-gray-700">Set Programmer</span>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <div className="w-3 h-3 rounded-full bg-green-500 flex-shrink-0"></div>
+                            <span className="text-xs text-gray-700">Terverifikasi</span>
+                          </div>
+                        </div>
+                        <div className="mt-2 p-2 bg-amber-50 border border-amber-200 rounded">
+                          <p className="text-xs text-amber-800">
+                            ℹ️ Status koordinat hanya tampil di development mode
+                          </p>
+                        </div>
+                      </div>
+                    )}
+
                     {/* Button to toggle list */}
                     <button
                       onClick={() => setShowSubAreaList(!showSubAreaList)}
@@ -588,6 +614,16 @@ const Map = () => {
                             location.type === 'market' ? 'P' :
                             'T';
 
+                          // Get status badge color for list
+                          const getStatusBadgeColor = (status) => {
+                            const colors = {
+                              needs_verification: 'bg-red-500',
+                              set_by_dev: 'bg-yellow-500',
+                              verified: 'bg-green-500'
+                            };
+                            return colors[status] || '';
+                          };
+
                           return (
                             <div
                               key={index}
@@ -598,8 +634,13 @@ const Map = () => {
                                   : 'bg-white hover:bg-gray-50 border border-gray-200'
                               }`}
                             >
-                              <div className={`${iconColor} text-white w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0`}>
-                                {iconText}
+                              <div className="relative">
+                                <div className={`${iconColor} text-white w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0`}>
+                                  {iconText}
+                                </div>
+                                {import.meta.env.VITE_APP_MODE === 'development' && location.coordinateStatus && (
+                                  <div className={`absolute -top-1 -right-1 w-3 h-3 rounded-full border border-white ${getStatusBadgeColor(location.coordinateStatus)}`}></div>
+                                )}
                               </div>
                               <div className="flex-1 min-w-0">
                                 <p className="text-xs font-medium text-gray-900 truncate">
@@ -851,6 +892,28 @@ const Map = () => {
           selectedAreas.some((area) => area.id === "dalam_kota") &&
           subAreaLocations.dalam_kota.map((location, index) => {
             const isSelected = selectedSubArea?.name === location.name;
+            const isDev = import.meta.env.VITE_APP_MODE === 'development';
+
+            // Get status color for polyline
+            const getStatusColor = (status) => {
+              if (!isDev || !status) return isSelected ? "#fbbf24" : "#ef4444";
+              const colors = {
+                needs_verification: '#ef4444',
+                set_by_dev: '#eab308',
+                verified: '#22c55e'
+              };
+              return isSelected ? "#fbbf24" : (colors[status] || "#ef4444");
+            };
+
+            // Get status label
+            const getStatusLabel = (status) => {
+              const labels = {
+                needs_verification: 'Butuh Verifikasi',
+                set_by_dev: 'Set Programmer',
+                verified: 'Terverifikasi'
+              };
+              return labels[status] || '-';
+            };
 
             // If it's a street (has multiple coords), render as Polyline
             if (location.type === "street" && Array.isArray(location.coords[0])) {
@@ -858,7 +921,7 @@ const Map = () => {
                 <Polyline
                   key={`subarea-${index}-${isSelected ? 'selected' : 'normal'}`}
                   positions={location.coords}
-                  color={isSelected ? "#fbbf24" : "#ef4444"}
+                  color={getStatusColor(location.coordinateStatus)}
                   weight={isSelected ? 8 : 6}
                   opacity={1}
                   dashArray={isSelected ? null : "10, 5"}
@@ -879,6 +942,16 @@ const Map = () => {
                           {location.kecamatan.replace(/_/g, " ")}
                         </span>
                       </p>
+                      {isDev && location.coordinateStatus && (
+                        <p className="text-gray-600 mt-1">
+                          Status Koordinat:{" "}
+                          <span className="font-medium" style={{
+                            color: getStatusColor(location.coordinateStatus)
+                          }}>
+                            {getStatusLabel(location.coordinateStatus)}
+                          </span>
+                        </p>
+                      )}
                     </div>
                   </Popup>
                 </Polyline>
@@ -893,7 +966,7 @@ const Map = () => {
                 <Marker
                   key={`subarea-${index}-${isSelected ? 'selected' : 'normal'}`}
                   position={position}
-                  icon={createIcon(location.type, isSelected)}
+                  icon={createIcon(location.type, isSelected, location.coordinateStatus)}
                 >
                   <Popup>
                     <div className="text-sm">
@@ -916,6 +989,16 @@ const Map = () => {
                           {location.kecamatan.replace(/_/g, " ")}
                         </span>
                       </p>
+                      {isDev && location.coordinateStatus && (
+                        <p className="text-gray-600 mt-1">
+                          Status Koordinat:{" "}
+                          <span className="font-medium" style={{
+                            color: getStatusColor(location.coordinateStatus)
+                          }}>
+                            {getStatusLabel(location.coordinateStatus)}
+                          </span>
+                        </p>
+                      )}
                     </div>
                   </Popup>
                 </Marker>
