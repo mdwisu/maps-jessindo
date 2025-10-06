@@ -3,9 +3,9 @@ import L from "leaflet";
 // Get status badge color and label
 const getStatusBadge = (status) => {
   const statusConfig = {
-    needs_verification: { color: '#ef4444', label: '!' },
-    set_by_dev: { color: '#06b6d4', label: '✓' },
-    verified: { color: '#22c55e', label: '✓✓' }
+    needs_coordinates: { color: '#ef4444', label: '!' },
+    estimated: { color: '#06b6d4', label: '~' },
+    verified: { color: '#22c55e', label: '✓' }
   };
   return statusConfig[status] || null;
 };

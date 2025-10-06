@@ -618,11 +618,11 @@ const Map = () => {
                         <div className="space-y-1.5">
                           <div className="flex items-center space-x-2">
                             <div className="w-3 h-3 rounded-full bg-red-500 flex-shrink-0"></div>
-                            <span className="text-xs text-gray-700">Butuh Verifikasi</span>
+                            <span className="text-xs text-gray-700">Belum Ada Koordinat</span>
                           </div>
                           <div className="flex items-center space-x-2">
                             <div className="w-3 h-3 rounded-full bg-cyan-500 flex-shrink-0"></div>
-                            <span className="text-xs text-gray-700">Set Programmer</span>
+                            <span className="text-xs text-gray-700">Estimasi (Butuh Konfirmasi)</span>
                           </div>
                           <div className="flex items-center space-x-2">
                             <div className="w-3 h-3 rounded-full bg-green-500 flex-shrink-0"></div>
@@ -675,8 +675,8 @@ const Map = () => {
                           // Get status badge color for list
                           const getStatusBadgeColor = (status) => {
                             const colors = {
-                              needs_verification: 'bg-red-500',
-                              set_by_dev: 'bg-cyan-500',
+                              needs_coordinates: 'bg-red-500',
+                              estimated: 'bg-cyan-500',
                               verified: 'bg-green-500'
                             };
                             return colors[status] || '';
@@ -966,8 +966,8 @@ const Map = () => {
             const getStatusColor = (status) => {
               if (!isDev || !status) return isSelected ? "#fbbf24" : "#ef4444";
               const colors = {
-                needs_verification: '#ef4444',
-                set_by_dev: '#06b6d4',
+                needs_coordinates: '#ef4444',
+                estimated: '#06b6d4',
                 verified: '#22c55e'
               };
               return isSelected ? "#fbbf24" : (colors[status] || "#ef4444");
@@ -976,8 +976,8 @@ const Map = () => {
             // Get status label
             const getStatusLabel = (status) => {
               const labels = {
-                needs_verification: 'Butuh Verifikasi',
-                set_by_dev: 'Set Programmer',
+                needs_coordinates: 'Belum Ada Koordinat',
+                estimated: 'Estimasi (Butuh Konfirmasi)',
                 verified: 'Terverifikasi'
               };
               return labels[status] || '-';
