@@ -3,6 +3,31 @@
 
 export const changelog = [
   {
+    version: "1.3.0",
+    date: "2025-10-07",
+    type: "coordinates",
+    items: [
+      {
+        category: "Sub Area B4 (Cigombong)",
+        icon: "📍",
+        changes: [
+          "Tambah 17 lokasi baru: Pasar Cigombong Pamoyanan, Cihideung, Pasar Cibadak Cijeruk, Pasar Caringin, Rancamaya, Cipaku, Warung Nangka Ciawi, Pasar Sukasari, Pasar Ciawi, Pasar Ciluar",
+          "Coverage 8 kecamatan: Cigombong, Sukaraja, Cijeruk, Caringin, Bogor Selatan, Bogor Timur, Ciawi, Bogor Utara",
+          "7 jalan utama ditambahkan: Jl.Ry.Pangeran Asogiri, Jln Raya Tanah Baru, Jln.Raya Sukabumi, Jl.Mandala Pomad, Jl Veteran, Jl.Ry.Cibeduk-Tapos, Ry.Jakarta-Bogor",
+        ],
+      },
+      {
+        category: "Update Koordinat B2 & B3",
+        icon: "🗺️",
+        changes: [
+          "B2 (Jasinga): 5 pasar diupdate koordinat (Pasar Leuwiliang, Pasar Cigudeg, Pasar Nanggung, Pasar Jasinga, Pasar Parabakti)",
+          "B3 (Cisarua): 6 pasar diupdate koordinat (Pasar Bojong Gede, Pasar Cisarua, Pasar Cibeureum Cisarua, Pasar Ciampea Baru, Pasar Ciampea Lama, Pasar Jumat Tenjolaya, Pasar Dramaga)",
+          "Total 11 lokasi pasar dari status needs_coordinates ke estimated",
+        ],
+      },
+    ],
+  },
+  {
     version: "1.2.0",
     date: "2025-10-06",
     type: "feature", // feature, update, bugfix, coordinates
