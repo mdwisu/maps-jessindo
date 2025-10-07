@@ -1,0 +1,119 @@
+// Changelog data for Maps Jessindo
+// Format: newest first
+
+export const changelog = [
+  {
+    version: "1.2.0",
+    date: "2025-10-06",
+    type: "feature", // feature, update, bugfix, coordinates
+    items: [
+      {
+        category: "Feature Baru",
+        icon: "✨",
+        changes: [
+          "Tambah button Google Maps di popup sub area",
+          "Design button modern dengan gradient biru dan hover effect",
+          "Popup multi-line sekarang semua bisa dibuka dengan koordinat yang akurat",
+        ],
+      },
+      {
+        category: "Update Koordinat",
+        icon: "📍",
+        changes: [
+          "Sistem status koordinat diubah: needs_coordinates, estimated, verified",
+          "Sub Area B2 (Jasinga): 14 lokasi ditambahkan",
+          "Sub Area B3 (Cisarua): 22 lokasi ditambahkan",
+        ],
+      },
+      {
+        category: "Improvement",
+        icon: "🚀",
+        changes: [
+          "Refactor sistem sub area menjadi dinamis dan scalable",
+          "Tidak perlu hardcode untuk area B4, D1-D4",
+          "Toggle sub area otomatis muncul untuk semua area",
+        ],
+      },
+      {
+        category: "Bug Fixes",
+        icon: "🐛",
+        changes: [
+          "Fix jalan dengan geojsonPath tidak muncul di peta",
+          "Fix popup line ke-2 tidak punya button Google Maps",
+          "Hapus info '2 cabang' yang membingungkan user",
+        ],
+      },
+    ],
+  },
+  {
+    version: "1.1.0",
+    date: "2025-10-03",
+    type: "coordinates",
+    items: [
+      {
+        category: "Update Koordinat B1",
+        icon: "📍",
+        changes: [
+          "JL JUANDA: GeoJSON dari QGIS (estimated)",
+          "JL PERINTIS KEMERDEKAAN: GeoJSON dari QGIS (estimated)",
+          "JL.MA SALMUN BAWAH: GeoJSON dari QGIS (estimated)",
+          "JL. PADASUKA: GeoJSON dari QGIS (estimated)",
+          "JL.LAWANG SAKETENG: GeoJSON dari QGIS (estimated)",
+        ],
+      },
+      {
+        category: "Feature Baru",
+        icon: "✨",
+        changes: [
+          "Tampilan sub area untuk B1 (Dalam Kota)",
+          "Status koordinat dengan color coding (merah/cyan/hijau)",
+          "Click to zoom pada sub area",
+          "List sub area dengan search dan filter",
+        ],
+      },
+    ],
+  },
+  {
+    version: "1.0.0",
+    date: "2025-09-28",
+    type: "feature",
+    items: [
+      {
+        category: "Initial Release",
+        icon: "🎉",
+        changes: [
+          "Peta interaktif dengan 8 area (B1-B4, D1-D4)",
+          "Multi-area selection",
+          "Area toggle dengan color coding",
+          "Popup informasi kecamatan",
+          "Responsive control panel",
+          "OpenStreetMap integration",
+        ],
+      },
+      {
+        category: "Data",
+        icon: "📊",
+        changes: [
+          "50+ GeoJSON kecamatan Bogor & Depok",
+          "B1 (Dalam Kota): 17 sub lokasi",
+          "Konfigurasi area dengan warna dan deskripsi",
+        ],
+      },
+    ],
+  },
+];
+
+// Helper to get changelog by type
+export const getChangelogByType = (type) => {
+  return changelog.filter((entry) => entry.type === type);
+};
+
+// Helper to get latest version
+export const getLatestVersion = () => {
+  return changelog[0]?.version || "1.0.0";
+};
+
+// Helper to get changelog count
+export const getChangelogCount = () => {
+  return changelog.length;
+};
