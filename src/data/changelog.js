@@ -3,6 +3,44 @@
 
 export const changelog = [
   {
+    version: "1.4.0",
+    date: "2025-10-13",
+    type: "feature",
+    items: [
+      {
+        category: "Tipe Lokasi Baru: Wilayah",
+        icon: "⭐",
+        changes: [
+          "Tambah tipe lokasi 'wilayah' dengan icon bintang ungu",
+          "Rendering logic untuk menampilkan lokasi wilayah sebagai marker/titik",
+          "Update popup content menampilkan 'Tipe: Wilayah' dengan warna ungu",
+          "Deskripsi panel diperbarui menjadi '(jalan, pasar, toko, wilayah)'",
+        ],
+      },
+      {
+        category: "Reklasifikasi Lokasi",
+        icon: "🏷️",
+        changes: [
+          "53 lokasi dari 'store' dipindahkan ke 'region' (wilayah)",
+          "D1 (Ciseeng): 2 lokasi (Jabon Mekar, Tanah Baru)",
+          "D2 (Palsi): 11 lokasi (CURUG, Harja Mukti, MEKARSARI, TUGU, PALSI GUNUNG, SUKMA JAYA, CILODONG, KALI MULYA, KALI BARU, JATI MULYA, SUKA MAJU)",
+          "D3 (Citereup): 13 lokasi (KARANG ASEM BARAT, TARI KOLOT, SANJA, PASIR MUKTI, CIJAYANTI, BOJONG KONENG, KARANG TENGAH, SENTUL, PONDOK RAJEG, TAPOS CIBINONG, CIKARET, PABUARAN, NANGGEWER)",
+          "D4 (Klapanunggal): 27 lokasi (NAMBO, BOJONG, CIKAHURIPAN, LULUT, LEWIKARET, LIGARMUKTI, JONGGOL, SINAR GALIH, BENDUNGAN, CIBODAS, SUKAJAYA, SINGASARI, DAYEH, BABAKAN RADEN, KARYA MEKAR, MEKAR WANGI, NAROGONG, KENARI, GANDOANG, GRIYA BUKIT JAYA, TLAJUNG UDIK, CICADAS, CIKEAS UDIK, KRANGGAN, NAGRAK)",
+          "Cisarua: 1 lokasi (CILEBUT)",
+        ],
+      },
+      {
+        category: "Update Koordinat",
+        icon: "📍",
+        changes: [
+          "Beberapa lokasi wilayah sudah ada koordinat (estimated)",
+          "Total 8+ lokasi wilayah dengan koordinat siap digunakan",
+          "Status coordinateStatus: 'estimated' untuk lokasi yang sudah ada koordinat",
+        ],
+      },
+    ],
+  },
+  {
     version: "1.3.0",
     date: "2025-10-07",
     type: "coordinates",

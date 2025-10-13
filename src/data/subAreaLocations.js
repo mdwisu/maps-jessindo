@@ -255,14 +255,14 @@ export const subAreaLocations = {
     // TANAH SEREAL - 4 locations
     {
       name: "KEBON PEDES",
-      type: "store",
+      type: "region",
       kecamatan: "tanah_sereal",
       coords: [-6.567947375694929, 106.79571286002924],
       coordinateStatus: "estimated",
     },
     {
       name: "PONDOK RUMPUT",
-      type: "store",
+      type: "region",
       kecamatan: "tanah_sereal",
       coords: [-6.572131343433982, 106.79365453536026],
       coordinateStatus: "estimated",
@@ -296,7 +296,7 @@ export const subAreaLocations = {
     },
     {
       name: "CIMANGGU",
-      type: "store",
+      type: "region",
       kecamatan: "tanah_sereal",
       coords: [-6.57073095723953, 106.78865760010426],
       coordinateStatus: "estimated",
@@ -330,8 +330,22 @@ export const subAreaLocations = {
       name: "JL RAYA LEUWILIANG",
       type: "street",
       kecamatan: "leuwiliang",
-      coords: [],
-      coordinateStatus: "needs_coordinates",
+      coords: [
+        [-6.573789, 106.637975],
+        [-6.574014, 106.637952],
+        [-6.574181, 106.637979],
+        [-6.574602, 106.63807],
+        [-6.575156, 106.638107],
+        [-6.575577, 106.63792],
+        [-6.575923, 106.637619],
+        [-6.575996, 106.637249],
+        [-6.575497, 106.635643],
+        [-6.575318, 106.634758],
+        [-6.575263, 106.634191],
+
+        [-6.570206, 106.624435],
+      ],
+      coordinateStatus: "estimated",
     },
 
     // CIGUDEG - 2 locations
@@ -346,8 +360,8 @@ export const subAreaLocations = {
       name: "JL RAYA CIGUDEG",
       type: "street",
       kecamatan: "cigudeg",
-      coords: [],
-      coordinateStatus: "needs_coordinates",
+      geojsonPath: "/data/geojson/subarea/jl raya cigudeg.geojson",
+      coordinateStatus: "estimated",
     },
 
     // CIBUNGBULANG - 1 location
@@ -355,7 +369,10 @@ export const subAreaLocations = {
       name: "JL RAYA CIBUNGBULANG",
       type: "street",
       kecamatan: "cibungbulang",
-      coords: [],
+      coords: [
+        [-6.559541211859181, 106.68888644447506],
+        [-6.575705898360544, 106.64742381867836],
+      ],
       coordinateStatus: "needs_coordinates",
     },
 
@@ -369,17 +386,17 @@ export const subAreaLocations = {
     },
     {
       name: "CIBEBER",
-      type: "store",
+      type: "region",
       kecamatan: "nanggung",
-      coords: null,
-      coordinateStatus: "needs_coordinates",
+      coords: [-6.625691736189321, 106.5413113641958],
+      coordinateStatus: "estimated",
     },
     {
       name: "SADENG",
-      type: "store",
+      type: "region",
       kecamatan: "nanggung",
-      coords: null,
-      coordinateStatus: "needs_coordinates",
+      coords: [-6.556903553907012, 106.5836517923662],
+      coordinateStatus: "estimated",
     },
 
     // JASINGA - 2 locations
@@ -394,7 +411,7 @@ export const subAreaLocations = {
       name: "JL RAYA JASINGA",
       type: "street",
       kecamatan: "jasinga",
-      coords: [],
+      coords: [[-6.544816825950291, 106.52864213417354]],
       coordinateStatus: "needs_coordinates",
     },
 
@@ -411,6 +428,875 @@ export const subAreaLocations = {
       type: "street",
       kecamatan: "pamijahan",
       coords: [],
+      coordinateStatus: "needs_coordinates",
+    },
+  ],
+
+  ciseeng: [
+    // CISEENG - 1 location
+    {
+      name: "PS CISEENG",
+      type: "market",
+      kecamatan: "ciseeng",
+      coords: [-6.449643393356176, 106.69896189937896],
+      coordinateStatus: "estimated",
+    },
+
+    // LIMO - 6 locations
+    {
+      name: "KURIPAN",
+      type: "region",
+      kecamatan: "limo",
+      coords: [-6.421350108551939, 106.66423792224393],
+      coordinateStatus: "estimated",
+    },
+    {
+      name: "KAREKEL",
+      type: "store",
+      kecamatan: "limo",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+    {
+      name: "MERUYUNG",
+      type: "region",
+      kecamatan: "limo",
+      coords: [-6.377971872859941, 106.77112138762618],
+      coordinateStatus: "estimated",
+    },
+    {
+      name: "GROGOL",
+      type: "region",
+      kecamatan: "limo",
+      coords: [-6.37598067646587, 106.78705953899257],
+      coordinateStatus: "estimated",
+    },
+    {
+      name: "KRUKUT",
+      type: "region",
+      kecamatan: "limo",
+      coords: [-6.358164648131618, 106.78974637267498],
+      coordinateStatus: "estimated",
+    },
+    {
+      name: "LIMO",
+      type: "region",
+      kecamatan: "limo",
+      coords: [-6.366998148117564, 106.78066912771006],
+      coordinateStatus: "estimated",
+    },
+
+    // BEJI - 2 locations
+    {
+      name: "KEADILAN",
+      type: "region",
+      kecamatan: "pancoran mas",
+      coords: [-6.4031013554958065, 106.78305333535802],
+      coordinateStatus: "estimated",
+    },
+    {
+      name: "BEJI",
+      type: "region",
+      kecamatan: "beji",
+      coords: [-6.372246395590876, 106.81746587046892],
+      coordinateStatus: "estimated",
+    },
+
+    // PARUNG - 1 location
+    {
+      name: "PS PARUNG",
+      type: "market",
+      kecamatan: "parung",
+      coords: [-6.423207182348265, 106.73177571794558],
+      coordinateStatus: "estimated",
+    },
+
+    // TAJUR HALANG - 1 location
+    {
+      name: "H. MAWI",
+      type: "store",
+      kecamatan: "tajur_halang",
+      coords: [-6.431718112377794, 106.7138899414703],
+      coordinateStatus: "estimated",
+    },
+
+    // BOJONGSARI - 2 locations
+    {
+      name: "BOJONGSARI",
+      type: "region",
+      kecamatan: "bojongsari",
+      coords: [-6.400058815463938, 106.74074700786824],
+      coordinateStatus: "estimated",
+    },
+    {
+      name: "COGREK",
+      type: "store",
+      kecamatan: "parung",
+      coords: [-6.421297373958523, 106.69142520561292],
+      coordinateStatus: "estimated",
+    },
+
+    // SAWANGAN - 1 location
+    {
+      name: "PAMEGARSARI",
+      type: "store",
+      kecamatan: "sawangan",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // PANCARAN MAS - 1 location
+    {
+      name: "WARUJAYA",
+      type: "store",
+      kecamatan: "pancaran_mas",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // LIMO - 1 location
+    {
+      name: "BOJONG INDAH",
+      type: "store",
+      kecamatan: "limo",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // SUKMA JAYA - 1 location
+    {
+      name: "JABON MEKAR",
+      type: "region",
+      kecamatan: "sukma_jaya",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // BEJI - 2 locations
+    {
+      name: "TANAH BARU",
+      type: "region",
+      kecamatan: "beji",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+    {
+      name: "PONDOK CINA",
+      type: "store",
+      kecamatan: "beji",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // BEJI - 1 location
+    {
+      name: "KUKUSAN",
+      type: "store",
+      kecamatan: "beji",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // BEJI - 1 location
+    {
+      name: "PS KEMIRI",
+      type: "market",
+      kecamatan: "beji",
+      coords: [-6.3894717664004546, 106.82262192095597],
+      coordinateStatus: "estimated",
+    },
+
+    // PANCARAN MAS - 1 location
+    {
+      name: "PS CITAYEM",
+      type: "market",
+      kecamatan: "pancaran_mas",
+      coords: [-6.450924741582781, 106.79966573840042],
+      coordinateStatus: "estimated",
+    },
+
+    // PANCARAN MAS - 1 location
+    {
+      name: "KALI SUREN",
+      type: "store",
+      kecamatan: "pancaran_mas",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // PANCARAN MAS - 1 location
+    {
+      name: "JL CITAYEM",
+      type: "street",
+      kecamatan: "pancaran_mas",
+      coords: [],
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // SAWANGAN - 1 location
+    {
+      name: "PONDOK TERONG",
+      type: "store",
+      kecamatan: "sawangan",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // PARUNG - 1 location
+    {
+      name: "NANGERANG",
+      type: "store",
+      kecamatan: "parung",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // TAJUR HALANG - 1 location
+    {
+      name: "TONJONG",
+      type: "store",
+      kecamatan: "tajur_halang",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // SUKMA JAYA - 1 location
+    {
+      name: "SUKMA JAYA",
+      type: "store",
+      kecamatan: "sukma_jaya",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+  ],
+
+  palsi: [
+    // CURUG - 1 location
+    {
+      name: "CURUG",
+      type: "region",
+      kecamatan: "curug",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // SUKMA JAYA - 1 location
+    {
+      name: "HARJA MUKTI",
+      type: "region",
+      kecamatan: "sukma_jaya",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // CILUPOD - 1 location
+    {
+      name: "MEKARSARI",
+      type: "region",
+      kecamatan: "cilupod",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // CIMANGGIS - 1 location
+    {
+      name: "TUGU",
+      type: "region",
+      kecamatan: "cimanggis",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // CIBINONG - 1 location
+    {
+      name: "PALSI GUNUNG",
+      type: "region",
+      kecamatan: "cibinong",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // CISALAK - 1 location
+    {
+      name: "PS. CISALAK",
+      type: "market",
+      kecamatan: "cisalak",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // SUKMA JAYA - 1 location
+    {
+      name: "SUKMA JAYA",
+      type: "region",
+      kecamatan: "sukma_jaya",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // CIPAYUNG - 1 location
+    {
+      name: "KOJA",
+      type: "store",
+      kecamatan: "cipayung",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // SUKATANI - 1 location
+    {
+      name: "PS SUKATANI",
+      type: "market",
+      kecamatan: "sukatani",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // CIPAYUNG - 1 location
+    {
+      name: "BAKTI ABRI",
+      type: "store",
+      kecamatan: "cipayung",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // CIPAYUNG - 1 location
+    {
+      name: "GAS ALAM",
+      type: "store",
+      kecamatan: "cipayung",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // CIPAYUNG - 1 location
+    {
+      name: "PEKAPURAN",
+      type: "store",
+      kecamatan: "cipayung",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // CIPAYUNG - 1 location
+    {
+      name: "BANJARAN PUCUNG",
+      type: "store",
+      kecamatan: "cipayung",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // CIPAYUNG - 2 locations
+    {
+      name: "PASAR MUSI & MINI",
+      type: "market",
+      kecamatan: "cipayung",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+    {
+      name: "PASAR AGUNG",
+      type: "market",
+      kecamatan: "cipayung",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // SUKMA JAYA - 1 location
+    {
+      name: "MEKAR JAYA",
+      type: "store",
+      kecamatan: "sukma_jaya",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // SUKMA JAYA - 1 location
+    {
+      name: "KEBAHAGIAN",
+      type: "store",
+      kecamatan: "sukma_jaya",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // SUKMA JAYA - 1 location
+    {
+      name: "ABADI JAYA",
+      type: "store",
+      kecamatan: "sukma_jaya",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // CILODONG - 2 locations
+    {
+      name: "CILODONG",
+      type: "region",
+      kecamatan: "cilodong",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+    {
+      name: "KALI MULYA",
+      type: "region",
+      kecamatan: "cilodong",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // BEJI - 1 location
+    {
+      name: "KALI BARU",
+      type: "region",
+      kecamatan: "beji",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // JATI MULYA - 1 location
+    {
+      name: "JATI MULYA",
+      type: "region",
+      kecamatan: "jati_mulya",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // SUKA MAJU - 1 location
+    {
+      name: "SUKA MAJU",
+      type: "region",
+      kecamatan: "suka_maju",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // PUCUNG - 1 location
+    {
+      name: "PS PUCUNG",
+      type: "market",
+      kecamatan: "pucung",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+  ],
+
+  citereup: [
+    // CITEREUP - 2 locations
+    {
+      name: "PS CITEREUP BAWAH (LAMA)",
+      type: "market",
+      kecamatan: "citereup",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+    {
+      name: "PS CITEREUP ATAS (BARU)",
+      type: "market",
+      kecamatan: "citereup",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // KARANG ASEM BARAT - 1 location
+    {
+      name: "KARANG ASEM BARAT",
+      type: "region",
+      kecamatan: "karang_asem_barat",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // TARI KOLOT - 1 location
+    {
+      name: "TARI KOLOT",
+      type: "region",
+      kecamatan: "tari_kolot",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // SANJA - 1 location
+    {
+      name: "SANJA",
+      type: "region",
+      kecamatan: "sanja",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // PASIR MUKTI - 1 location
+    {
+      name: "PASIR MUKTI",
+      type: "region",
+      kecamatan: "pasir_mukti",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // BABAKAN MADANG - 1 location
+    {
+      name: "PASAR BABAKAN MADANG",
+      type: "market",
+      kecamatan: "babakan_madang",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // CIJAYANTI - 1 location
+    {
+      name: "CIJAYANTI",
+      type: "region",
+      kecamatan: "cijayanti",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // BOJONG KONENG - 1 location
+    {
+      name: "BOJONG KONENG",
+      type: "region",
+      kecamatan: "bojong_koneng",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // KARANG TENGAH - 1 location
+    {
+      name: "KARANG TENGAH",
+      type: "region",
+      kecamatan: "karang_tengah",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // SENTUL - 1 location
+    {
+      name: "SENTUL",
+      type: "region",
+      kecamatan: "sentul",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // CIKEMA - 1 location
+    {
+      name: "PSR CIKEMA",
+      type: "market",
+      kecamatan: "cikema",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // PONDOK RAJEG - 1 location
+    {
+      name: "PONDOK RAJEG",
+      type: "region",
+      kecamatan: "pondok_rajeg",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // CIBINONG - 1 location
+    {
+      name: "TAPOS CIBINONG",
+      type: "region",
+      kecamatan: "cibinong",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // CIKARET - 1 location
+    {
+      name: "CIKARET",
+      type: "region",
+      kecamatan: "cikaret",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // PABUARAN - 1 location
+    {
+      name: "PABUARAN",
+      type: "region",
+      kecamatan: "pabuaran",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // NANGGEWER - 1 location
+    {
+      name: "NANGGEWER",
+      type: "region",
+      kecamatan: "nanggewer",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // CIBINONG - 1 location
+    {
+      name: "PSR CIBINONG",
+      type: "market",
+      kecamatan: "cibinong",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+  ],
+
+  klapanunggal: [
+    // NAMBO - 1 location
+    {
+      name: "NAMBO",
+      type: "region",
+      kecamatan: "nambo",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // BOJONG - 1 location
+    {
+      name: "BOJONG",
+      type: "region",
+      kecamatan: "bojong",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // CIKAHURIPAN - 1 location
+    {
+      name: "CIKAHURIPAN",
+      type: "region",
+      kecamatan: "cikahuripan",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // LULUT - 1 location
+    {
+      name: "LULUT",
+      type: "region",
+      kecamatan: "lulut",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // LEWIKARET - 1 location
+    {
+      name: "LEWIKARET",
+      type: "region",
+      kecamatan: "lewikaret",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // LIGARMUKTI - 1 location
+    {
+      name: "LIGARMUKTI",
+      type: "region",
+      kecamatan: "ligarmukti",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // JONGGOL - 2 locations
+    {
+      name: "JONGGOL",
+      type: "region",
+      kecamatan: "jonggol",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+    {
+      name: "SINAR GALIH",
+      type: "region",
+      kecamatan: "jonggol",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // BENDUNGAN - 1 location
+    {
+      name: "BENDUNGAN",
+      type: "region",
+      kecamatan: "bendungan",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // CIBODAS - 1 location
+    {
+      name: "CIBODAS",
+      type: "region",
+      kecamatan: "cibodas",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // SUKAJAYA - 1 location
+    {
+      name: "SUKAJAYA",
+      type: "region",
+      kecamatan: "sukajaya",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // SINGASARI - 1 location
+    {
+      name: "SINGASARI",
+      type: "region",
+      kecamatan: "singasari",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // DAYEH - 1 location
+    {
+      name: "DAYEH",
+      type: "region",
+      kecamatan: "dayeh",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // CARIU - 2 locations
+    {
+      name: "PASAR CARIU",
+      type: "market",
+      kecamatan: "cariu",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+    {
+      name: "BABAKAN RADEN",
+      type: "region",
+      kecamatan: "cariu",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // KARYA MEKAR - 1 location
+    {
+      name: "KARYA MEKAR",
+      type: "region",
+      kecamatan: "karya_mekar",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // MEKAR WANGI - 1 location
+    {
+      name: "MEKAR WANGI",
+      type: "region",
+      kecamatan: "mekar_wangi",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // CILENGSI - 2 locations
+    {
+      name: "PASAR CILENGSI",
+      type: "market",
+      kecamatan: "cilengsi",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+    {
+      name: "NAROGONG",
+      type: "region",
+      kecamatan: "cilengsi",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // GUNUNG PUTRI - 2 locations
+    {
+      name: "KENARI",
+      type: "region",
+      kecamatan: "gunung_putri",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+    {
+      name: "GANDOANG",
+      type: "region",
+      kecamatan: "gunung_putri",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // MEKARSARI - 1 location
+    {
+      name: "MEKARSARI",
+      type: "region",
+      kecamatan: "mekarsari",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // GRIYA BUKIT JAYA - 1 location
+    {
+      name: "GRIYA BUKIT JAYA",
+      type: "region",
+      kecamatan: "griya_bukit_jaya",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // WANAHERANG - 1 location
+    {
+      name: "PASAR WANAHERANG",
+      type: "market",
+      kecamatan: "wanaherang",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // TLAJUNG UDIK - 1 location
+    {
+      name: "TLAJUNG UDIK",
+      type: "region",
+      kecamatan: "tlajung_udik",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // CICADAS - 1 location
+    {
+      name: "CICADAS",
+      type: "region",
+      kecamatan: "cicadas",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // CIKEAS UDIK - 1 location
+    {
+      name: "CIKEAS UDIK",
+      type: "region",
+      kecamatan: "cikeas_udik",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // KRANGGAN - 1 location
+    {
+      name: "KRANGGAN",
+      type: "region",
+      kecamatan: "kranggan",
+      coords: null,
+      coordinateStatus: "needs_coordinates",
+    },
+
+    // NAGRAK - 1 location
+    {
+      name: "NAGRAK",
+      type: "region",
+      kecamatan: "nagrak",
+      coords: null,
       coordinateStatus: "needs_coordinates",
     },
   ],
@@ -433,10 +1319,10 @@ export const subAreaLocations = {
     },
     {
       name: "CILEBUT",
-      type: "store",
+      type: "region",
       kecamatan: "bojong_gede",
-      coords: null,
-      coordinateStatus: "needs_coordinates",
+      coords: [-6.530169807759946, 106.79559132851234],
+      coordinateStatus: "estimated",
     },
     {
       name: "JL RAYA BAMBU KUNING",
@@ -449,7 +1335,7 @@ export const subAreaLocations = {
     // CISARUA - 4 locations
     {
       name: "KAYUMANIS",
-      type: "store",
+      type: "region",
       kecamatan: "cisarua",
       coords: null,
       coordinateStatus: "needs_coordinates",
@@ -593,17 +1479,17 @@ export const subAreaLocations = {
       name: "PASAR CIGOMBONG PAMOYANAN",
       type: "market",
       kecamatan: "cigombong",
-      coords: null,
-      coordinateStatus: "needs_coordinates",
+      coords: [-6.747811188924524, 106.79803096995775],
+      coordinateStatus: "estimated",
     },
 
     // SUKARAJA - 2 locations
     {
       name: "CIHIDEUNG",
-      type: "store",
-      kecamatan: "sukaraja",
-      coords: null,
-      coordinateStatus: "needs_coordinates",
+      type: "region",
+      kecamatan: "Cijeruk",
+      coords: [-6.6894929558991505, 106.79122230885717],
+      coordinateStatus: "estimated",
     },
     {
       name: "JL.RY.PANGERAN ASOGIRI",
@@ -632,30 +1518,30 @@ export const subAreaLocations = {
       name: "PASAR CIBADAK CIJERUK",
       type: "market",
       kecamatan: "cijeruk",
-      coords: null,
-      coordinateStatus: "needs_coordinates",
+      coords: [-6.707351672355963, 106.79590789482587],
+      coordinateStatus: "estimated",
     },
 
     // CARINGIN - 1 location
     {
-      name: "PASAR. CARINGIN",
+      name: "PASAR CARINGIN",
       type: "market",
       kecamatan: "caringin",
-      coords: null,
-      coordinateStatus: "needs_coordinates",
+      coords: [-6.943279929207259, 107.58221830417871],
+      coordinateStatus: "estimated",
     },
 
     // BOGOR SELATAN - 3 locations
     {
       name: "RANCAMAYA",
-      type: "store",
+      type: "region",
       kecamatan: "bogor_selatan",
       coords: null,
       coordinateStatus: "needs_coordinates",
     },
     {
       name: "CIPAKU",
-      type: "store",
+      type: "region",
       kecamatan: "bogor_selatan",
       coords: null,
       coordinateStatus: "needs_coordinates",
@@ -693,18 +1579,18 @@ export const subAreaLocations = {
       coordinateStatus: "needs_coordinates",
     },
     {
-      name: "PASAR  SUKASARI",
+      name: "PASAR SUKASARI",
       type: "market",
       kecamatan: "ciawi",
-      coords: null,
-      coordinateStatus: "needs_coordinates",
+      coords: [-6.61834079302604, 106.8127759875217],
+      coordinateStatus: "estimated",
     },
     {
       name: "PASAR  CIAWI",
       type: "market",
       kecamatan: "ciawi",
-      coords: null,
-      coordinateStatus: "needs_coordinates",
+      coords: [-6.656440009532861, 106.8471596793115],
+      coordinateStatus: "estimated",
     },
 
     // BOGOR UTARA - 2 locations
@@ -712,8 +1598,8 @@ export const subAreaLocations = {
       name: "PASAR CILUAR",
       type: "market",
       kecamatan: "bogor_utara",
-      coords: null,
-      coordinateStatus: "needs_coordinates",
+      coords: [-6.544538955663917, 106.82718978543961],
+      coordinateStatus: "estimated",
     },
     {
       name: "RY.JAKARTA-BOGOR",

@@ -652,7 +652,7 @@ const Map = () => {
                       </div>
                       <p className="text-xs text-blue-700 mt-2">
                         Menampilkan {subLocations.length} lokasi
-                        (jalan, pasar, toko)
+                        (jalan, pasar, toko, wilayah)
                       </p>
 
                     {/* Status Legend - only show in development mode */}
@@ -709,11 +709,13 @@ const Map = () => {
                             const iconColor =
                               location.type === 'street' ? 'bg-blue-500' :
                               location.type === 'market' ? 'bg-green-500' :
+                              location.type === 'region' ? 'bg-purple-500' :
                               'bg-orange-500';
 
                             const iconText =
                               location.type === 'street' ? 'J' :
                               location.type === 'market' ? 'P' :
+                              location.type === 'region' ? 'W' :
                               'T';
 
                             // Get status badge color for list
@@ -1149,7 +1151,9 @@ const Map = () => {
                     <div className="text-sm">
                       <h4 className="font-bold mb-1"
                         style={{
-                          color: location.type === 'market' ? '#10b981' : '#f59e0b'
+                          color: location.type === 'market' ? '#10b981' :
+                                  location.type === 'region' ? '#8b5cf6' :
+                                  '#f59e0b'
                         }}
                       >
                         {location.name}
@@ -1157,7 +1161,9 @@ const Map = () => {
                       <p className="text-gray-600">
                         Tipe:{" "}
                         <span className="font-medium capitalize">
-                          {location.type === "market" ? "Pasar" : "Toko/Ruko"}
+                          {location.type === "market" ? "Pasar" :
+                           location.type === "region" ? "Wilayah" :
+                           "Toko/Ruko"}
                         </span>
                       </p>
                       <p className="text-gray-600">

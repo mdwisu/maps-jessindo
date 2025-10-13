@@ -51,6 +51,18 @@ export const createIcon = (type, isSelected = false, coordinateStatus = null) =>
       </div>`,
       iconSize: isSelected ? [34, 34] : [26, 26],
       iconAnchor: isSelected ? [17, 17] : [13, 13]
+    },
+    region: {
+      html: `<div style="position: relative; width: ${isSelected ? '36px' : '28px'}; height: ${isSelected ? '36px' : '28px'};">
+        <div style="background: #8b5cf6; width: 100%; height: 100%; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: ${isSelected ? '3px' : '2px'} solid ${isSelected ? '#fbbf24' : 'white'}; box-shadow: 0 ${isSelected ? '4px 8px' : '2px 4px'} rgba(0,0,0,${isSelected ? '0.4' : '0.3'}); transition: all 0.3s;">
+          <svg width="${isSelected ? '20' : '16'}" height="${isSelected ? '20' : '16'}" viewBox="0 0 24 24" fill="white">
+            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+          </svg>
+        </div>
+        ${statusBadge ? `<div style="position: absolute; top: -4px; right: -4px; background: ${statusBadge.color}; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid white; font-size: 9px; font-weight: bold; color: white;">${statusBadge.label}</div>` : ''}
+      </div>`,
+      iconSize: isSelected ? [36, 36] : [28, 28],
+      iconAnchor: isSelected ? [18, 18] : [14, 14]
     }
   };
 
