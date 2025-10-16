@@ -34,9 +34,9 @@ const Map = () => {
   // Dynamic state for showing sub area lists per area
   const [showSubAreaListMap, setShowSubAreaListMap] = useState({});
 
-  // State for schedule section
-  const [showScheduleSection, setShowScheduleSection] = useState(false);
-  const [selectedScheduleDay, setSelectedScheduleDay] = useState("SENIN");
+  // State for schedule section - dynamic per area
+  const [showScheduleSectionMap, setShowScheduleSectionMap] = useState({});
+  const [selectedScheduleDayMap, setSelectedScheduleDayMap] = useState({});
 
   // Mapping area ID to schedule ID
   const areaToScheduleMap = {
@@ -48,29 +48,6 @@ const Map = () => {
     'palsi': 'D2',
     'citereup': 'D3',
     'klapanunggal': 'D4'
-  };
-
-  // Helper function to check if schedule should be shown
-  const shouldShowSchedule = () => {
-    // Only show schedule if exactly 1 area is selected
-    if (selectedAreas.length !== 1) return false;
-
-    const selectedArea = selectedAreas[0];
-
-    // Don't show for global/regional selections
-    if (selectedArea.id === 'semua' || selectedArea.id === 'semua_bogor' || selectedArea.id === 'semua_depok') {
-      return false;
-    }
-
-    // Check if this area has schedule data
-    const scheduleId = areaToScheduleMap[selectedArea.id];
-    return scheduleId !== undefined;
-  };
-
-  // Get current schedule ID based on selected area
-  const getCurrentScheduleId = () => {
-    if (selectedAreas.length !== 1) return null;
-    return areaToScheduleMap[selectedAreas[0].id];
   };
 
   // Helper functions to toggle sub areas
@@ -85,6 +62,21 @@ const Map = () => {
     setShowSubAreaListMap(prev => ({
       ...prev,
       [areaId]: !prev[areaId]
+    }));
+  };
+
+  // Helper functions to toggle schedule section
+  const toggleScheduleSection = (areaId) => {
+    setShowScheduleSectionMap(prev => ({
+      ...prev,
+      [areaId]: !prev[areaId]
+    }));
+  };
+
+  const setScheduleDay = (areaId, day) => {
+    setSelectedScheduleDayMap(prev => ({
+      ...prev,
+      [areaId]: day
     }));
   };
 
@@ -819,125 +811,133 @@ const Map = () => {
                           })}
                         </div>
                       )}
+
+                      {/* Jadwal Salesman Section - Embedded within each Sub Area */}
+                      {(() => {
+                        // Check if this area has schedule data
+                        const scheduleId = areaToScheduleMap[area.id];
+                        if (!scheduleId) return null;
+
+                        const areaName = area.name;
+                        const isScheduleOpen = showScheduleSectionMap[area.id];
+                        const selectedDay = selectedScheduleDayMap[area.id] || 'SENIN';
+
+                        return (
+                          <div className="mt-3 p-3 bg-green-50 border border-green-200 rounded-lg">
+                            <div
+                              className="flex items-center justify-between cursor-pointer"
+                              onClick={() => toggleScheduleSection(area.id)}
+                            >
+                              <div className="flex items-center space-x-2">
+                                <svg
+                                  className="w-4 h-4 text-green-600"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                  />
+                                </svg>
+                                <span className="text-sm font-medium text-green-900">
+                                  Jadwal Salesman {areaName}
+                                </span>
+                              </div>
+                              <svg
+                                className={`w-4 h-4 text-green-600 transition-transform ${isScheduleOpen ? 'rotate-180' : ''}`}
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M19 9l-7 7-7-7"
+                                />
+                              </svg>
+                            </div>
+
+                            {isScheduleOpen && (
+                              <div className="mt-3">
+                                {/* Day Selector */}
+                                <div className="flex flex-wrap gap-1 mb-3">
+                                  {['SENIN', 'SELASA', 'RABU', 'KAMIS', 'JUMAT', 'SABTU'].map(day => (
+                                    <button
+                                      key={day}
+                                      onClick={() => setScheduleDay(area.id, day)}
+                                      className={`px-2 py-1 rounded text-xs font-medium transition-colors ${
+                                        selectedDay === day
+                                          ? 'bg-green-600 text-white'
+                                          : 'bg-white text-green-700 hover:bg-green-100 border border-green-200'
+                                      }`}
+                                    >
+                                      {day}
+                                    </button>
+                                  ))}
+                                </div>
+
+                                {/* Schedule Content */}
+                                {(() => {
+                                  const scheduleData = getScheduleByAreaAndDay(scheduleId, selectedDay);
+
+                                  if (!scheduleData || !scheduleData.locations || scheduleData.locations.length === 0) {
+                                    return (
+                                      <div className="text-center py-4 text-gray-500 text-xs">
+                                        Tidak ada jadwal untuk {selectedDay}
+                                      </div>
+                                    );
+                                  }
+
+                                  return (
+                                    <div className="space-y-2">
+                                      {/* Salesmen Info */}
+                                      <div className="bg-white p-2 rounded border border-green-200">
+                                        <p className="text-xs font-semibold text-gray-700 mb-1">Tim Salesman:</p>
+                                        <div className="flex flex-wrap gap-1">
+                                          {scheduleData.salesmen.map((salesman, idx) => (
+                                            <span
+                                              key={idx}
+                                              className="text-xs px-2 py-0.5 rounded"
+                                              style={{
+                                                backgroundColor: `${divisionColors[salesman.division]}20`,
+                                                color: divisionColors[salesman.division]
+                                              }}
+                                            >
+                                              {salesman.name} ({salesman.division})
+                                            </span>
+                                          ))}
+                                        </div>
+                                      </div>
+
+                                      {/* Locations */}
+                                      <div className="bg-white p-2 rounded border border-green-200">
+                                        <p className="text-xs font-semibold text-gray-700 mb-1">
+                                          Lokasi Kunjungan ({scheduleData.locations.length}):
+                                        </p>
+                                        <ul className="space-y-1">
+                                          {scheduleData.locations.map((location, idx) => (
+                                            <li key={idx} className="flex items-start space-x-2 text-xs">
+                                              <span className="text-green-600 font-bold">{idx + 1}.</span>
+                                              <span className="text-gray-700">{location}</span>
+                                            </li>
+                                          ))}
+                                        </ul>
+                                      </div>
+                                    </div>
+                                  );
+                                })()}
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })()}
                     </div>
                   );
                 })}
-
-                {/* Jadwal Salesman Section - Only show for single specific area */}
-                {shouldShowSchedule() && (
-                  <div className="mt-3 p-3 bg-green-50 border border-green-200 rounded-lg">
-                    <div
-                      className="flex items-center justify-between cursor-pointer"
-                      onClick={() => setShowScheduleSection(!showScheduleSection)}
-                    >
-                      <div className="flex items-center space-x-2">
-                        <svg
-                          className="w-4 h-4 text-green-600"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                          />
-                        </svg>
-                        <span className="text-sm font-medium text-green-900">
-                          Jadwal Salesman {selectedAreas[0]?.name}
-                        </span>
-                      </div>
-                      <svg
-                        className={`w-4 h-4 text-green-600 transition-transform ${showScheduleSection ? 'rotate-180' : ''}`}
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M19 9l-7 7-7-7"
-                        />
-                      </svg>
-                    </div>
-
-                    {showScheduleSection && (
-                      <div className="mt-3">
-                        {/* Day Selector */}
-                        <div className="flex flex-wrap gap-1 mb-3">
-                          {['SENIN', 'SELASA', 'RABU', 'KAMIS', 'JUMAT', 'SABTU'].map(day => (
-                            <button
-                              key={day}
-                              onClick={() => setSelectedScheduleDay(day)}
-                              className={`px-2 py-1 rounded text-xs font-medium transition-colors ${
-                                selectedScheduleDay === day
-                                  ? 'bg-green-600 text-white'
-                                  : 'bg-white text-green-700 hover:bg-green-100 border border-green-200'
-                              }`}
-                            >
-                              {day}
-                            </button>
-                          ))}
-                        </div>
-
-                        {/* Schedule Content */}
-                        {(() => {
-                          // Get schedule ID for currently selected area
-                          const currentScheduleId = getCurrentScheduleId();
-                          const scheduleData = getScheduleByAreaAndDay(currentScheduleId, selectedScheduleDay);
-
-                          if (!scheduleData || !scheduleData.locations || scheduleData.locations.length === 0) {
-                            return (
-                              <div className="text-center py-4 text-gray-500 text-xs">
-                                Tidak ada jadwal untuk {selectedScheduleDay}
-                              </div>
-                            );
-                          }
-
-                          return (
-                            <div className="space-y-2">
-                              {/* Salesmen Info */}
-                              <div className="bg-white p-2 rounded border border-green-200">
-                                <p className="text-xs font-semibold text-gray-700 mb-1">Tim Salesman:</p>
-                                <div className="flex flex-wrap gap-1">
-                                  {scheduleData.salesmen.map((salesman, idx) => (
-                                    <span
-                                      key={idx}
-                                      className="text-xs px-2 py-0.5 rounded"
-                                      style={{
-                                        backgroundColor: `${divisionColors[salesman.division]}20`,
-                                        color: divisionColors[salesman.division]
-                                      }}
-                                    >
-                                      {salesman.name} ({salesman.division})
-                                    </span>
-                                  ))}
-                                </div>
-                              </div>
-
-                              {/* Locations */}
-                              <div className="bg-white p-2 rounded border border-green-200">
-                                <p className="text-xs font-semibold text-gray-700 mb-1">
-                                  Lokasi Kunjungan ({scheduleData.locations.length}):
-                                </p>
-                                <ul className="space-y-1">
-                                  {scheduleData.locations.map((location, idx) => (
-                                    <li key={idx} className="flex items-start space-x-2 text-xs">
-                                      <span className="text-green-600 font-bold">{idx + 1}.</span>
-                                      <span className="text-gray-700">{location}</span>
-                                    </li>
-                                  ))}
-                                </ul>
-                              </div>
-                            </div>
-                          );
-                        })()}
-                      </div>
-                    )}
-                  </div>
-                )}
               </div>
 
               {/* Selected Areas Info */}
