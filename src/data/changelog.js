@@ -3,6 +3,58 @@
 
 export const changelog = [
   {
+    version: "1.6.0",
+    date: "2025-10-17",
+    type: "feature",
+    items: [
+      {
+        category: "Jadwal Salesman",
+        icon: "📅",
+        changes: [
+          "Fitur baru: Jadwal Salesman terintegrasi di Modern Control Panel",
+          "Tampilkan jadwal hanya untuk area spesifik yang dipilih (B1-B4, D1-D4)",
+          "Dynamic schedule berdasarkan area terpilih dengan nama area di header",
+          "Conditional rendering: jadwal tidak muncul saat pilih multiple areas atau semua area",
+        ],
+      },
+      {
+        category: "Data Jadwal Lengkap",
+        icon: "✨",
+        changes: [
+          "B1 (Dalam Kota): 6 salesman, 17 lokasi kunjungan per minggu",
+          "B2 (Jasinga): 6 salesman, 14 lokasi kunjungan per minggu",
+          "B3 (Cisarua): 6 salesman, 22 lokasi kunjungan per minggu",
+          "B4 (Cigombong): 6 salesman, 18 lokasi kunjungan per minggu",
+          "D1 (Ciseeng): 6 salesman, 31 lokasi kunjungan per minggu",
+          "D2 (Palsi): 6 salesman, 21 lokasi kunjungan per minggu",
+          "D3 (Citereup): 6 salesman, 20 lokasi kunjungan per minggu",
+          "D4 (Klapanunggal): 6 salesman, 26 lokasi kunjungan per minggu",
+        ],
+      },
+      {
+        category: "UI/UX Improvements",
+        icon: "🎨",
+        changes: [
+          "Accordion dengan color-coded badges per divisi (GRO 1/2/3, UCI, KSP, MI)",
+          "Day selector dengan 6 buttons (SENIN-SABTU)",
+          "Numbered list untuk lokasi kunjungan",
+          "Smooth transition dan hover effects",
+          "Green theme untuk membedakan dari section lain",
+        ],
+      },
+      {
+        category: "Technical Implementation",
+        icon: "⚙️",
+        changes: [
+          "Area mapping: dalam_kota→B1, jasinga→B2, cisarua→B3, cigombong→B4, dll",
+          "Helper functions: shouldShowSchedule(), getCurrentScheduleId()",
+          "Dynamic data fetching dengan getScheduleByAreaAndDay()",
+          "Semua divisi mengunjungi lokasi yang sama di hari yang sama",
+        ],
+      },
+    ],
+  },
+  {
     version: "1.5.0",
     date: "2025-10-16",
     type: "reorganization",
