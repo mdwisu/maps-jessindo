@@ -3,6 +3,55 @@
 
 export const changelog = [
   {
+    version: "1.5.0",
+    date: "2025-10-16",
+    type: "reorganization",
+    items: [
+      {
+        category: "Reorganisasi Data Area D1-D4",
+        icon: "🔄",
+        changes: [
+          "Reklasifikasi kecamatan: 53+ lokasi dipindah ke kecamatan yang benar sesuai areaFiles",
+          "D1 (Ciseeng): KURIPAN & KAREKEL dipindah dari LIMO ke CISEENG, ditambah koordinat",
+          "D1 (Parung): 6 lokasi (H. MAWI, BOJONGSARI, PAMEGARSARI, WARUJAYA, BOJONG INDAH, JABON MEKAR) dipindah ke PARUNG, semua dapat koordinat",
+          "D1 (Beji): 4 lokasi (TANAH BARU, PONDOK CINA, KUKUSAN, BEJI) dapat koordinat estimasi",
+          "D1 (Tajur Halang): 6 lokasi dapat koordinat, KLASIFIKASI ULANG dari store ke region",
+        ],
+      },
+      {
+        category: "Standardisasi Tipe Lokasi",
+        icon: "🏷️",
+        changes: [
+          "20+ lokasi diklasifikasi ulang dari 'store' ke 'region'",
+          "Konsistensi tipe data untuk semua area wilayah",
+          "Struktur data lebih terorganisir dan mudah dipelihara",
+        ],
+      },
+      {
+        category: "Update Koordinat Masif",
+        icon: "📍",
+        changes: [
+          "100+ lokasi D1-D4 dapat koordinat estimasi",
+          "Status berubah dari 'needs_coordinates' ke 'estimated'",
+          "D2 (Palsi): Semua 24 lokasi dapat koordinat estimasi",
+          "D3 (Citereup): Semua 18 lokasi dapat koordinat estimasi",
+          "D4 (Klapanunggal): Semua 32 lokasi dapat koordinat estimasi",
+          "Total keseluruhan: 150+ lokasi dengan koordinat siap digunakan",
+        ],
+      },
+      {
+        category: "Improvements",
+        icon: "🚀",
+        changes: [
+          "Sinkronisasi data antara areaFiles dan subAreaLocations",
+          "Struktur data lebih konsisten dan terorganisir",
+          "Persiapan untuk validasi data area B1-B4",
+          "Memperbaiki mapping kecamatan yang salah sebelumnya",
+        ],
+      },
+    ],
+  },
+  {
     version: "1.4.0",
     date: "2025-10-13",
     type: "feature",
