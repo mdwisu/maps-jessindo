@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from "react";
 import { MapContainer, TileLayer, GeoJSON, Marker, Polyline, Popup, useMap } from "react-leaflet";
-import SalesmanSchedule from "./SalesmanSchedule.jsx";
 import { subAreaLocations } from "../data/subAreaLocations.js";
 import { availableAreas, areaFiles, DEFAULT_MAP_CENTER, DEFAULT_MAP_ZOOM } from "../constants/areaData.js";
 import { createIcon, zoomToSubArea as zoomToSubAreaHelper, geoJsonStyle as geoJsonStyleHelper } from "../utils/mapHelpers.js";
@@ -296,8 +295,6 @@ const Map = () => {
       layer.bindPopup(popupContent);
     }
   };
-
-  const [showSchedule, setShowSchedule] = useState(false);
 
   // Component to access map instance and handle click events
   const MapEvents = () => {
